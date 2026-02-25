@@ -1,0 +1,36 @@
+services:
+  # API Service
+  - type: web
+    name: officer-priya-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    
+  # Bot Service
+  - type: worker
+    name: officer-priya-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot_simple.py
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    
+  # Scheduler Service
+  - type: worker
+    name: officer-priya-scheduler
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python multi_user_scheduler.py
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0

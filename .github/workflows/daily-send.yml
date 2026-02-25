@@ -1,0 +1,41 @@
+name: Daily Video Send
+
+on:
+  schedule:
+    # Run at 6 AM UTC every day (adjust as needed)
+    - cron: '0 6 * * *'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  send-daily:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Send Daily Videos
+        run: |
+          echo "Sending daily videos at $(date)"
+          
+          # Call backend API endpoint
+          response=$(curl -X POST \
+            -H "Content-Type: application/json" \
+            -w "\n%{http_code}" \
+            "${{ secrets.BACKEND_URL }}/api/send-daily")
+          
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+          
+          echo "Response: $body"
+          echo "HTTP Code: $http_code"
+          
+          if [ "$http_code" -ne 200 ]; then
+            echo "Error: Failed to send daily videos"
+            exit 1
+          fi
+          
+          echo "Successfully sent daily videos"
+      
+      - name: Log Execution
+        if: always()
+        run: |
+          echo "Workflow executed at: $(date)"
+          echo "Status: ${{ job.status }}"

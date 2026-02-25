@@ -1,0 +1,86 @@
+.logs-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.logs-section h2 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.logs-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.logs-table thead {
+  background: #f8f9fa;
+}
+
+.logs-table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.logs-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.logs-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.day-cell {
+  font-weight: 600;
+  color: #667eea;
+}
+
+.subject-cell {
+  font-weight: 500;
+}
+
+.status-cell {
+  text-align: center;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-done .status-badge {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-not_done .status-badge {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.status-pending .status-badge {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2rem;
+  color: #999;
+  font-style: italic;
+}
