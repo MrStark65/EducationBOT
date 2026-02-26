@@ -1,11 +1,11 @@
 from typing import List
-from models import DailyLog
+from user_repository import UserDailyLog
 
 
 class StreakCalculator:
     """Calculate and manage study streaks"""
     
-    def calculate_streak(self, logs: List[DailyLog]) -> int:
+    def calculate_streak(self, logs: List[UserDailyLog]) -> int:
         """
         Calculate consecutive DONE days from most recent
         

@@ -1,0 +1,553 @@
+.file-library {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.filters {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.search-input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.filter-select {
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  background: white;
+  cursor: pointer;
+}
+
+.upload-btn {
+  cursor: pointer;
+  display: inline-block;
+}
+
+.file-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.file-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  gap: 12px;
+  align-items: start;
+  transition: box-shadow 0.2s;
+}
+
+.file-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.file-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-name {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-meta {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.file-type {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.file-size {
+  color: #666;
+  font-size: 12px;
+}
+
+.file-date {
+  color: #999;
+  font-size: 11px;
+}
+
+.file-actions {
+  display: flex;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.hint {
+  color: #999;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+/* Send and Schedule buttons */
+.btn-send {
+  color: #10b981;
+}
+
+.btn-send:hover {
+  background: #d1fae5;
+}
+
+.btn-schedule {
+  color: #6366f1;
+}
+
+.btn-schedule:hover {
+  background: #e0e7ff;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 20px;
+}
+
+.modal-subtitle {
+  color: #64748b;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 25px;
+}
+
+.btn-secondary {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #e2e8f0;
+  color: #475569;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+.success-message {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+
+.header-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 13px;
+  color: #666;
+  font-weight: normal;
+}
+
+.file-library .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.file-library .header > div h2 {
+  margin: 0;
+}
+
+
+/* Sending Notification (Non-blocking) */
+.sending-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: white;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 1000;
+  border-left: 4px solid #667eea;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.loader-spinner-small {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.sending-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sending-text strong {
+  color: #1a1a1a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sending-text small {
+  color: #666;
+  font-size: 12px;
+}
+
+/* Remove old overlay styles */
+.sending-overlay {
+  display: none;
+}
+
+.sending-modal {
+  display: none;
+}
+
+.loader-spinner {
+  display: none;
+}
+
+.sending-modal h3,
+.sending-modal p,
+.sending-note {
+  display: none;
+}
+
+/* Button states */
+.btn-send.sending {
+  background: #ffa726;
+  cursor: not-allowed;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.btn-icon:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== RESPONSIVE STYLES ===== */
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+  .file-library {
+    padding: 16px;
+  }
+
+  .file-grid {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .modal {
+    padding: 24px;
+    max-width: 90%;
+  }
+}
+
+/* Tablet Portrait (768px and below) */
+@media (max-width: 768px) {
+  .file-library {
+    padding: 12px;
+  }
+
+  .file-library .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .filters {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-input,
+  .filter-select {
+    width: 100%;
+  }
+
+  .file-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .file-card {
+    padding: 12px;
+  }
+
+  .file-icon {
+    font-size: 28px;
+  }
+
+  .file-name {
+    font-size: 13px;
+  }
+
+  .file-meta {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .modal {
+    padding: 20px;
+    width: 95%;
+  }
+
+  .modal h3 {
+    font-size: 18px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+
+  .sending-notification {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+    padding: 12px 16px;
+  }
+
+  .sending-text strong {
+    font-size: 13px;
+  }
+
+  .sending-text small {
+    font-size: 11px;
+  }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .file-library {
+    padding: 8px;
+  }
+
+  .file-library .header > div h2 {
+    font-size: 18px;
+  }
+
+  .header-subtitle {
+    font-size: 12px;
+  }
+
+  .upload-btn {
+    width: 100%;
+  }
+
+  .upload-btn button {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .file-card {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .file-icon {
+    font-size: 24px;
+  }
+
+  .file-name {
+    font-size: 12px;
+  }
+
+  .file-type {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .file-size,
+  .file-date {
+    font-size: 11px;
+  }
+
+  .file-actions {
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .file-actions button {
+    width: 100%;
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .modal {
+    padding: 16px;
+    border-radius: 8px;
+  }
+
+  .modal h3 {
+    font-size: 16px;
+  }
+
+  .modal-subtitle {
+    font-size: 12px;
+  }
+
+  .form-group {
+    margin-bottom: 16px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .btn-secondary {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .sending-notification {
+    bottom: 12px;
+    right: 12px;
+    left: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+  }
+
+  .loader-spinner-small {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+
+  .sending-text strong {
+    font-size: 12px;
+  }
+
+  .sending-text small {
+    font-size: 10px;
+  }
+}

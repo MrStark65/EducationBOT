@@ -1,11 +1,11 @@
 from typing import List
-from models import DailyLog
+from user_repository import UserDailyLog
 
 
 class CompletionCalculator:
     """Calculate completion percentages"""
     
-    def calculate_overall(self, logs: List[DailyLog]) -> float:
+    def calculate_overall(self, logs: List[UserDailyLog]) -> float:
         """
         Return percentage of DONE days out of total
         
@@ -23,7 +23,7 @@ class CompletionCalculator:
         
         return round((completed / total) * 100, 1)
     
-    def calculate_weekly(self, logs: List[DailyLog]) -> float:
+    def calculate_weekly(self, logs: List[UserDailyLog]) -> float:
         """
         Return percentage of DONE days in last 7 days
         

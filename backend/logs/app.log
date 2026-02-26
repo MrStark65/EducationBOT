@@ -1,0 +1,268 @@
+2026-02-26 16:57:52 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 16:57:53 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 16:57:53 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 16:57:53 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_165753.db.gz
+2026-02-26 16:57:53 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 16:57:53 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 16:58:19 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 16:58:19 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 16:58:20 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 16:58:21 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 16:58:21 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 16:58:21 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_165821.db.gz
+2026-02-26 16:58:21 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 16:58:21 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 16:58:29 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 16:58:29 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 16:58:31 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 16:58:31 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 16:58:31 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 16:58:31 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_165831.db.gz
+2026-02-26 16:58:31 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 16:58:31 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 16:59:50 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 16:59:50 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:00:50 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:00:51 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 17:00:51 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 17:00:51 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_170051.db.gz
+2026-02-26 17:00:51 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 17:00:51 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:01:46 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:01:46 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:01:48 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:01:48 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 17:01:48 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 17:01:48 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_170148.db.gz
+2026-02-26 17:01:48 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 17:01:48 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:01:55 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:01:55 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:01:57 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:01:57 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 17:01:57 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 17:01:57 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_170157.db.gz
+2026-02-26 17:01:57 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 17:01:57 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:02:16 - app - INFO - test_system:test_logging:45 - Test info message
+2026-02-26 17:02:16 - app - WARNING - test_system:test_logging:46 - Test warning message
+2026-02-26 17:02:16 - app - ERROR - test_system:test_logging:47 - Test error message
+2026-02-26 17:11:24 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:11:24 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:11:25 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:11:25 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 17:11:25 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 17:11:25 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_171125.db.gz
+2026-02-26 17:11:25 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 17:11:25 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:11:27 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:11:27 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:11:28 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:11:29 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 17:11:29 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 17:11:29 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_171129.db.gz
+2026-02-26 17:11:29 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 17:11:29 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:14:28 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:14:28 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:14:29 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:14:29 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 17:14:29 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 17:14:29 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_171429.db.gz
+2026-02-26 17:14:29 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 17:14:29 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:15:14 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:15:14 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:15:30 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:15:30 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 17:15:30 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 17:15:30 - app - INFO - main:lifespan:104 - ✅ Initial backup created: backups/backup_20260226_171530.db.gz
+2026-02-26 17:15:30 - app - INFO - main:lifespan:111 - ✅ Multi-user system initialized
+2026-02-26 17:15:30 - app - INFO - main:lifespan:112 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:17:50 - app - INFO - main:lifespan:117 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:17:50 - app - INFO - main:lifespan:119 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:17:51 - app - INFO - main:lifespan:76 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:17:51 - app - INFO - main:lifespan:94 - ✅ Authentication system initialized
+2026-02-26 17:17:51 - app - INFO - main:lifespan:98 - ✅ Backup system initialized
+2026-02-26 17:17:51 - app - INFO - main:lifespan:103 - ✅ File manager initialized
+2026-02-26 17:17:51 - app - INFO - main:lifespan:109 - ✅ Initial backup created: backups/backup_20260226_171751.db.gz
+2026-02-26 17:17:51 - app - INFO - main:lifespan:116 - ✅ Multi-user system initialized
+2026-02-26 17:17:51 - app - INFO - main:lifespan:117 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:17:57 - app - INFO - main:lifespan:122 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:17:57 - app - INFO - main:lifespan:124 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:17:58 - app - INFO - main:lifespan:77 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:17:58 - app - INFO - main:lifespan:95 - ✅ Authentication system initialized
+2026-02-26 17:17:58 - app - INFO - main:lifespan:99 - ✅ Backup system initialized
+2026-02-26 17:17:58 - app - INFO - main:lifespan:104 - ✅ File manager initialized
+2026-02-26 17:17:58 - app - INFO - main:lifespan:110 - ✅ Initial backup created: backups/backup_20260226_171758.db.gz
+2026-02-26 17:17:58 - app - INFO - main:lifespan:117 - ✅ Multi-user system initialized
+2026-02-26 17:17:58 - app - INFO - main:lifespan:118 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:18:21 - app - INFO - main:lifespan:123 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:18:21 - app - INFO - main:lifespan:125 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:18:23 - app - INFO - main:lifespan:77 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:18:23 - app - INFO - main:lifespan:95 - ✅ Authentication system initialized
+2026-02-26 17:18:23 - app - INFO - main:lifespan:99 - ✅ Backup system initialized
+2026-02-26 17:18:23 - app - INFO - main:lifespan:104 - ✅ File manager initialized
+2026-02-26 17:18:23 - app - INFO - main:lifespan:110 - ✅ Initial backup created: backups/backup_20260226_171823.db.gz
+2026-02-26 17:18:23 - app - INFO - main:lifespan:117 - ✅ Multi-user system initialized
+2026-02-26 17:18:23 - app - INFO - main:lifespan:118 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:26:34 - app - INFO - main:lifespan:123 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:26:34 - app - INFO - main:lifespan:125 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:26:36 - app - INFO - main:lifespan:77 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:26:37 - app - INFO - main:lifespan:95 - ✅ Authentication system initialized
+2026-02-26 17:26:37 - app - INFO - main:lifespan:99 - ✅ Backup system initialized
+2026-02-26 17:26:37 - app - INFO - main:lifespan:104 - ✅ File manager initialized
+2026-02-26 17:26:37 - app - INFO - main:lifespan:110 - ✅ Initial backup created: backups/backup_20260226_172637.db.gz
+2026-02-26 17:26:37 - app - INFO - main:lifespan:117 - ✅ Multi-user system initialized
+2026-02-26 17:26:37 - app - INFO - main:lifespan:118 - ✅ Advanced Scheduler Service initialized
+2026-02-26 17:26:48 - app - INFO - main:lifespan:123 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:26:48 - app - INFO - main:lifespan:125 - 🛑 Advanced Scheduler Service stopped
+2026-02-26 17:26:50 - app - INFO - main:lifespan:77 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:26:50 - app - INFO - main:lifespan:95 - ✅ Authentication system initialized
+2026-02-26 17:26:50 - app - INFO - main:lifespan:99 - ✅ Backup system initialized
+2026-02-26 17:26:50 - app - INFO - main:lifespan:104 - ✅ File manager initialized
+2026-02-26 17:26:50 - app - INFO - main:lifespan:110 - ✅ Initial backup created: backups/backup_20260226_172650.db.gz
+2026-02-26 17:26:50 - app - INFO - main:lifespan:117 - ✅ Multi-user system initialized
+2026-02-26 17:28:18 - app - INFO - main:lifespan:122 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:28:56 - app - INFO - main:lifespan:75 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:28:56 - app - INFO - main:lifespan:93 - ✅ Authentication system initialized
+2026-02-26 17:28:56 - app - INFO - main:lifespan:97 - ✅ Backup system initialized
+2026-02-26 17:28:56 - app - INFO - main:lifespan:102 - ✅ File manager initialized
+2026-02-26 17:28:56 - app - INFO - main:lifespan:108 - ✅ Initial backup created: backups/backup_20260226_172856.db.gz
+2026-02-26 17:28:56 - app - INFO - main:lifespan:115 - ✅ Multi-user system initialized
+2026-02-26 17:36:36 - app - INFO - main:lifespan:120 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:36:38 - app - INFO - main:lifespan:75 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:36:38 - app - INFO - main:lifespan:93 - ✅ Authentication system initialized
+2026-02-26 17:36:38 - app - INFO - main:lifespan:97 - ✅ Backup system initialized
+2026-02-26 17:36:38 - app - INFO - main:lifespan:102 - ✅ File manager initialized
+2026-02-26 17:36:38 - app - INFO - main:lifespan:108 - ✅ Initial backup created: backups/backup_20260226_173638.db.gz
+2026-02-26 17:36:38 - app - INFO - main:lifespan:115 - ✅ Multi-user system initialized
+2026-02-26 17:36:47 - app - INFO - main:lifespan:120 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:36:48 - app - INFO - main:lifespan:75 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:36:49 - app - INFO - main:lifespan:93 - ✅ Authentication system initialized
+2026-02-26 17:36:49 - app - INFO - main:lifespan:97 - ✅ Backup system initialized
+2026-02-26 17:36:49 - app - INFO - main:lifespan:102 - ✅ File manager initialized
+2026-02-26 17:36:49 - app - INFO - main:lifespan:108 - ✅ Initial backup created: backups/backup_20260226_173649.db.gz
+2026-02-26 17:36:49 - app - INFO - main:lifespan:115 - ✅ Multi-user system initialized
+2026-02-26 17:36:54 - app - INFO - main:lifespan:120 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:36:55 - app - INFO - main:lifespan:75 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:36:56 - app - INFO - main:lifespan:93 - ✅ Authentication system initialized
+2026-02-26 17:36:56 - app - INFO - main:lifespan:97 - ✅ Backup system initialized
+2026-02-26 17:36:56 - app - INFO - main:lifespan:102 - ✅ File manager initialized
+2026-02-26 17:36:56 - app - INFO - main:lifespan:108 - ✅ Initial backup created: backups/backup_20260226_173656.db.gz
+2026-02-26 17:36:56 - app - INFO - main:lifespan:115 - ✅ Multi-user system initialized
+2026-02-26 17:37:08 - app - INFO - main:lifespan:120 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:37:09 - app - INFO - main:lifespan:75 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:37:09 - app - INFO - main:lifespan:93 - ✅ Authentication system initialized
+2026-02-26 17:37:09 - app - INFO - main:lifespan:97 - ✅ Backup system initialized
+2026-02-26 17:37:09 - app - INFO - main:lifespan:102 - ✅ File manager initialized
+2026-02-26 17:37:09 - app - INFO - main:lifespan:108 - ✅ Initial backup created: backups/backup_20260226_173709.db.gz
+2026-02-26 17:37:09 - app - INFO - main:lifespan:115 - ✅ Multi-user system initialized
+2026-02-26 17:37:15 - app - INFO - main:lifespan:120 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:37:16 - app - INFO - main:lifespan:75 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:37:17 - app - INFO - main:lifespan:93 - ✅ Authentication system initialized
+2026-02-26 17:37:17 - app - INFO - main:lifespan:97 - ✅ Backup system initialized
+2026-02-26 17:37:17 - app - INFO - main:lifespan:102 - ✅ File manager initialized
+2026-02-26 17:37:17 - app - INFO - main:lifespan:108 - ✅ Initial backup created: backups/backup_20260226_173717.db.gz
+2026-02-26 17:37:17 - app - INFO - main:lifespan:115 - ✅ Multi-user system initialized
+2026-02-26 17:37:42 - app - INFO - main:lifespan:120 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:37:43 - app - INFO - main:lifespan:75 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:37:44 - app - INFO - main:lifespan:93 - ✅ Authentication system initialized
+2026-02-26 17:37:44 - app - INFO - main:lifespan:97 - ✅ Backup system initialized
+2026-02-26 17:37:44 - app - INFO - main:lifespan:102 - ✅ File manager initialized
+2026-02-26 17:37:44 - app - INFO - main:lifespan:108 - ✅ Initial backup created: backups/backup_20260226_173744.db.gz
+2026-02-26 17:37:44 - app - INFO - main:lifespan:115 - ✅ Multi-user system initialized
+2026-02-26 17:38:01 - app - INFO - main:lifespan:120 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:38:02 - app - INFO - main:lifespan:78 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:38:03 - app - INFO - main:lifespan:96 - ✅ Authentication system initialized
+2026-02-26 17:38:03 - app - INFO - main:lifespan:100 - ✅ Backup system initialized
+2026-02-26 17:38:03 - app - INFO - main:lifespan:105 - ✅ File manager initialized
+2026-02-26 17:38:03 - app - INFO - main:lifespan:111 - ✅ Initial backup created: backups/backup_20260226_173803.db.gz
+2026-02-26 17:38:03 - app - INFO - main:lifespan:118 - ✅ Multi-user system initialized
+2026-02-26 17:38:10 - app - INFO - main:lifespan:123 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:38:11 - app - INFO - main:lifespan:79 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:38:12 - app - INFO - main:lifespan:97 - ✅ Authentication system initialized
+2026-02-26 17:38:12 - app - INFO - main:lifespan:101 - ✅ Backup system initialized
+2026-02-26 17:38:12 - app - INFO - main:lifespan:106 - ✅ File manager initialized
+2026-02-26 17:38:12 - app - INFO - main:lifespan:112 - ✅ Initial backup created: backups/backup_20260226_173812.db.gz
+2026-02-26 17:38:12 - app - INFO - main:lifespan:119 - ✅ Multi-user system initialized
+2026-02-26 17:38:24 - app - INFO - main:lifespan:124 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:38:25 - app - INFO - main:lifespan:79 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:38:25 - app - INFO - main:lifespan:97 - ✅ Authentication system initialized
+2026-02-26 17:38:25 - app - INFO - main:lifespan:101 - ✅ Backup system initialized
+2026-02-26 17:38:25 - app - INFO - main:lifespan:106 - ✅ File manager initialized
+2026-02-26 17:38:25 - app - INFO - main:lifespan:110 - ✅ User manager initialized
+2026-02-26 17:38:25 - app - INFO - main:lifespan:116 - ✅ Initial backup created: backups/backup_20260226_173825.db.gz
+2026-02-26 17:38:25 - app - INFO - main:lifespan:123 - ✅ Multi-user system initialized
+2026-02-26 17:38:39 - app - INFO - main:lifespan:128 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:38:41 - app - INFO - main:lifespan:79 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:38:41 - app - INFO - main:lifespan:97 - ✅ Authentication system initialized
+2026-02-26 17:38:41 - app - INFO - main:lifespan:101 - ✅ Backup system initialized
+2026-02-26 17:38:41 - app - INFO - main:lifespan:106 - ✅ File manager initialized
+2026-02-26 17:38:41 - app - INFO - main:lifespan:110 - ✅ User manager initialized
+2026-02-26 17:38:41 - app - INFO - main:lifespan:116 - ✅ Initial backup created: backups/backup_20260226_173841.db.gz
+2026-02-26 17:38:41 - app - INFO - main:lifespan:123 - ✅ Multi-user system initialized
+2026-02-26 17:39:00 - app - INFO - main:lifespan:128 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:39:02 - app - INFO - main:lifespan:79 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:39:02 - app - INFO - main:lifespan:97 - ✅ Authentication system initialized
+2026-02-26 17:39:02 - app - INFO - main:lifespan:101 - ✅ Backup system initialized
+2026-02-26 17:39:02 - app - INFO - main:lifespan:106 - ✅ File manager initialized
+2026-02-26 17:39:02 - app - INFO - main:lifespan:110 - ✅ User manager initialized
+2026-02-26 17:39:02 - app - INFO - main:lifespan:116 - ✅ Initial backup created: backups/backup_20260226_173902.db.gz
+2026-02-26 17:39:02 - app - INFO - main:lifespan:123 - ✅ Multi-user system initialized
+2026-02-26 17:52:09 - app - INFO - main:lifespan:128 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:52:10 - app - INFO - main:lifespan:79 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:52:11 - app - INFO - main:lifespan:97 - ✅ Authentication system initialized
+2026-02-26 17:52:11 - app - INFO - main:lifespan:101 - ✅ Backup system initialized
+2026-02-26 17:52:11 - app - INFO - main:lifespan:106 - ✅ File manager initialized
+2026-02-26 17:52:11 - app - INFO - main:lifespan:110 - ✅ User manager initialized
+2026-02-26 17:52:11 - app - INFO - main:lifespan:116 - ✅ Initial backup created: backups/backup_20260226_175211.db.gz
+2026-02-26 17:52:11 - app - INFO - main:lifespan:123 - ✅ Multi-user system initialized
+2026-02-26 17:52:29 - app - INFO - main:lifespan:128 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 17:52:30 - app - INFO - main:lifespan:79 - 🚀 Starting Officer Priya CDS System
+2026-02-26 17:52:30 - app - INFO - main:lifespan:97 - ✅ Authentication system initialized
+2026-02-26 17:52:30 - app - INFO - main:lifespan:101 - ✅ Backup system initialized
+2026-02-26 17:52:30 - app - INFO - main:lifespan:106 - ✅ File manager initialized
+2026-02-26 17:52:30 - app - INFO - main:lifespan:110 - ✅ User manager initialized
+2026-02-26 17:52:31 - app - INFO - main:lifespan:116 - ✅ Initial backup created: backups/backup_20260226_175230.db.gz
+2026-02-26 17:52:31 - app - INFO - main:lifespan:123 - ✅ Multi-user system initialized
+2026-02-26 18:00:52 - app - INFO - main:lifespan:128 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 18:00:53 - app - INFO - main:lifespan:79 - 🚀 Starting Officer Priya CDS System
+2026-02-26 18:00:53 - app - INFO - main:lifespan:97 - ✅ Authentication system initialized
+2026-02-26 18:00:53 - app - INFO - main:lifespan:101 - ✅ Backup system initialized
+2026-02-26 18:00:53 - app - INFO - main:lifespan:106 - ✅ File manager initialized
+2026-02-26 18:00:53 - app - INFO - main:lifespan:110 - ✅ User manager initialized
+2026-02-26 18:00:53 - app - INFO - main:lifespan:116 - ✅ Initial backup created: backups/backup_20260226_180053.db.gz
+2026-02-26 18:00:53 - app - INFO - main:lifespan:123 - ✅ Multi-user system initialized
+2026-02-26 18:01:05 - app - INFO - main:lifespan:128 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 18:01:06 - app - INFO - main:lifespan:79 - 🚀 Starting Officer Priya CDS System
+2026-02-26 18:01:06 - app - INFO - main:lifespan:97 - ✅ Authentication system initialized
+2026-02-26 18:01:06 - app - INFO - main:lifespan:101 - ✅ Backup system initialized
+2026-02-26 18:01:06 - app - INFO - main:lifespan:106 - ✅ File manager initialized
+2026-02-26 18:01:06 - app - INFO - main:lifespan:110 - ✅ User manager initialized
+2026-02-26 18:01:06 - app - INFO - main:lifespan:116 - ✅ Initial backup created: backups/backup_20260226_180106.db.gz
+2026-02-26 18:01:06 - app - INFO - main:lifespan:123 - ✅ Multi-user system initialized
+2026-02-26 18:14:17 - app - INFO - main:lifespan:128 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 18:14:19 - app - INFO - main:lifespan:79 - 🚀 Starting Officer Priya CDS System
+2026-02-26 18:14:19 - app - INFO - main:lifespan:97 - ✅ Authentication system initialized
+2026-02-26 18:14:19 - app - INFO - main:lifespan:101 - ✅ Backup system initialized
+2026-02-26 18:14:19 - app - INFO - main:lifespan:106 - ✅ File manager initialized
+2026-02-26 18:14:19 - app - INFO - main:lifespan:110 - ✅ User manager initialized
+2026-02-26 18:14:19 - app - INFO - main:lifespan:116 - ✅ Initial backup created: backups/backup_20260226_181419.db.gz
+2026-02-26 18:14:19 - app - INFO - main:lifespan:123 - ✅ Multi-user system initialized
+2026-02-26 18:17:43 - app - INFO - main:lifespan:128 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 18:17:44 - app - INFO - main:lifespan:82 - 🚀 Starting Officer Priya CDS System
+2026-02-26 18:17:45 - app - INFO - main:lifespan:100 - ✅ Authentication system initialized
+2026-02-26 18:17:45 - app - INFO - main:lifespan:104 - ✅ Backup system initialized
+2026-02-26 18:17:45 - app - INFO - main:lifespan:109 - ✅ File manager initialized
+2026-02-26 18:17:45 - app - INFO - main:lifespan:113 - ✅ User manager initialized
+2026-02-26 18:17:45 - app - INFO - main:lifespan:119 - ✅ Initial backup created: backups/backup_20260226_181745.db.gz
+2026-02-26 18:17:45 - app - INFO - main:lifespan:126 - ✅ Multi-user system initialized
+2026-02-26 18:17:51 - app - INFO - main:lifespan:131 - 🛑 Shutting down Officer Priya CDS System
+2026-02-26 18:17:53 - app - INFO - main:lifespan:84 - 🚀 Starting Officer Priya CDS System
+2026-02-26 18:17:53 - app - INFO - main:lifespan:102 - ✅ Authentication system initialized
+2026-02-26 18:17:53 - app - INFO - main:lifespan:106 - ✅ Backup system initialized
+2026-02-26 18:17:53 - app - INFO - main:lifespan:111 - ✅ File manager initialized
+2026-02-26 18:17:53 - app - INFO - main:lifespan:115 - ✅ User manager initialized
+2026-02-26 18:17:53 - app - INFO - main:lifespan:121 - ✅ Initial backup created: backups/backup_20260226_181753.db.gz
+2026-02-26 18:17:53 - app - INFO - main:lifespan:128 - ✅ Multi-user system initialized

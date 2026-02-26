@@ -84,3 +84,124 @@
   color: #999;
   font-style: italic;
 }
+
+/* ===== RESPONSIVE STYLES ===== */
+
+/* Tablet (1024px and below) */
+@media (max-width: 1024px) {
+  .logs-section {
+    padding: 1.25rem;
+  }
+
+  .logs-table th,
+  .logs-table td {
+    padding: 0.625rem;
+    font-size: 14px;
+  }
+}
+
+/* Tablet Portrait (768px and below) */
+@media (max-width: 768px) {
+  .logs-section {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .logs-section h2 {
+    font-size: 18px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .logs-table {
+    min-width: 600px;
+  }
+
+  .logs-table th,
+  .logs-table td {
+    padding: 0.5rem;
+    font-size: 13px;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+  }
+
+  .empty-state {
+    padding: 1.5rem;
+    font-size: 14px;
+  }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .logs-section {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .logs-section h2 {
+    font-size: 16px;
+    margin-bottom: 0.75rem;
+  }
+
+  .logs-table {
+    min-width: 500px;
+  }
+
+  .logs-table th,
+  .logs-table td {
+    padding: 0.4rem;
+    font-size: 12px;
+  }
+
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 0.15rem 0.5rem;
+  }
+
+  .empty-state {
+    padding: 1rem;
+    font-size: 13px;
+  }
+
+  /* Alternative: Card layout for mobile */
+  .logs-table.mobile-cards {
+    display: block;
+    min-width: auto;
+  }
+
+  .logs-table.mobile-cards thead {
+    display: none;
+  }
+
+  .logs-table.mobile-cards tbody {
+    display: block;
+  }
+
+  .logs-table.mobile-cards tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.75rem;
+    background: white;
+  }
+
+  .logs-table.mobile-cards td {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border: none;
+  }
+
+  .logs-table.mobile-cards td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #666;
+  }
+}

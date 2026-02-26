@@ -337,3 +337,147 @@ input:checked + .toggle-slider:before {
     font-size: 2rem;
   }
 }
+
+/* Section Tabs */
+.section-tabs {
+  display: flex;
+  gap: 0.5rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.section-tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #64748b;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.section-tab:hover {
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.section-tab.active {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgb(99 102 241 / 0.3);
+}
+
+.section-tab .tab-icon {
+  font-size: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .section-tabs {
+    flex-direction: column;
+  }
+  
+  .section-tab {
+    justify-content: flex-start;
+  }
+}
+
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .schedule-sections {
+    gap: 12px;
+  }
+
+  .section-button {
+    padding: 14px 20px;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .schedule-config {
+    padding: 16px;
+  }
+
+  .schedule-sections {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .section-button {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .schedule-form {
+    padding: 16px;
+  }
+
+  .form-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .form-group {
+    flex: 1 1 100%;
+  }
+
+  .time-preview {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .global-notice {
+    padding: 12px;
+    font-size: 13px;
+  }
+}
+
+/* Small mobile (max-width: 480px) */
+@media (max-width: 480px) {
+  .schedule-config {
+    padding: 12px;
+  }
+
+  .section-button {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+
+  .section-icon {
+    font-size: 20px;
+  }
+
+  .schedule-form {
+    padding: 12px;
+  }
+
+  .form-group label {
+    font-size: 13px;
+  }
+
+  .form-group input,
+  .form-group select {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .btn-primary {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}

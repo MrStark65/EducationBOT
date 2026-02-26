@@ -321,3 +321,370 @@ class UserRepository:
             raise e
         finally:
             conn.close()
+
+    
+    # Custom playlist operations
+    def get_custom_playlists(self, user_id: int) -> list:
+        """Get all custom playlists for user"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT subject_name, playlist_url, current_index 
+            FROM custom_playlists 
+            WHERE user_id = ?
+            ORDER BY created_at ASC
+        """, (user_id,))
+        rows = cursor.fetchall()
+        conn.close()
+        
+        return [dict(row) for row in rows]
+    
+    def upsert_custom_playlist(self, user_id: int, subject_name: str, playlist_url: str) -> bool:
+        """Create or update custom playlist"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute("""
+                INSERT INTO custom_playlists (user_id, subject_name, playlist_url, current_index)
+                VALUES (?, ?, ?, 0)
+                ON CONFLICT(user_id, subject_name) 
+                DO UPDATE SET playlist_url = ?, current_index = 0, updated_at = CURRENT_TIMESTAMP
+            """, (user_id, subject_name, playlist_url, playlist_url))
+            conn.commit()
+            return True
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+    
+    def delete_custom_playlist(self, user_id: int, subject_name: str) -> bool:
+        """Delete custom playlist"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute("""
+                DELETE FROM custom_playlists 
+                WHERE user_id = ? AND subject_name = ?
+            """, (user_id, subject_name))
+            conn.commit()
+            return cursor.rowcount > 0
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+    
+    # Playlist schedule operations
+    def get_playlist_schedule(self, user_id: int, subject_name: str) -> Optional[dict]:
+        """Get schedule for a specific playlist"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT subject_name, start_date, frequency, selected_days, last_sent_date
+            FROM playlist_schedules 
+            WHERE user_id = ? AND subject_name = ?
+        """, (user_id, subject_name))
+        row = cursor.fetchone()
+        conn.close()
+        
+        if row:
+            import json
+            return {
+                'subject_name': row['subject_name'],
+                'start_date': row['start_date'],
+                'frequency': row['frequency'],
+                'selected_days': json.loads(row['selected_days']),
+                'last_sent_date': row['last_sent_date']
+            }
+        return None
+    
+    def get_all_playlist_schedules(self, user_id: int) -> dict:
+        """Get all playlist schedules for a user"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT subject_name, start_date, frequency, selected_days, last_sent_date
+            FROM playlist_schedules 
+            WHERE user_id = ?
+        """, (user_id,))
+        rows = cursor.fetchall()
+        conn.close()
+        
+        import json
+        schedules = {}
+        for row in rows:
+            schedules[row['subject_name']] = {
+                'start_date': row['start_date'],
+                'frequency': row['frequency'],
+                'selected_days': json.loads(row['selected_days']),
+                'last_sent_date': row['last_sent_date']
+            }
+        return schedules
+    
+    def upsert_playlist_schedule(self, user_id: int, subject_name: str, start_date: str, 
+                                  frequency: str, selected_days: list) -> bool:
+        """Create or update playlist schedule"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            import json
+            selected_days_json = json.dumps(selected_days)
+            
+            cursor.execute("""
+                INSERT INTO playlist_schedules (user_id, subject_name, start_date, frequency, selected_days)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(user_id, subject_name) 
+                DO UPDATE SET 
+                    start_date = ?,
+                    frequency = ?,
+                    selected_days = ?,
+                    updated_at = CURRENT_TIMESTAMP
+            """, (user_id, subject_name, start_date, frequency, selected_days_json,
+                  start_date, frequency, selected_days_json))
+            conn.commit()
+            return True
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+    
+    def update_playlist_last_sent(self, user_id: int, subject_name: str, date: str) -> bool:
+        """Update last sent date for a playlist"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute("""
+                UPDATE playlist_schedules 
+                SET last_sent_date = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE user_id = ? AND subject_name = ?
+            """, (date, user_id, subject_name))
+            conn.commit()
+            return cursor.rowcount > 0
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+    
+    def delete_playlist_schedule(self, user_id: int, subject_name: str) -> bool:
+        """Delete playlist schedule"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute("""
+                DELETE FROM playlist_schedules 
+                WHERE user_id = ? AND subject_name = ?
+            """, (user_id, subject_name))
+            conn.commit()
+            return cursor.rowcount > 0
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+
+
+class GlobalConfig:
+    """Global configuration model"""
+    def __init__(self, current_day=0, english_playlist="", history_playlist="", 
+                 polity_playlist="", geography_playlist="", economics_playlist="",
+                 english_index=0, history_index=0, polity_index=0, 
+                 geography_index=0, economics_index=0,
+                 schedule_enabled=False, schedule_time="06:00"):
+        self.current_day = current_day
+        self.english_playlist = english_playlist
+        self.history_playlist = history_playlist
+        self.polity_playlist = polity_playlist
+        self.geography_playlist = geography_playlist
+        self.economics_playlist = economics_playlist
+        self.english_index = english_index
+        self.history_index = history_index
+        self.polity_index = polity_index
+        self.geography_index = geography_index
+        self.economics_index = economics_index
+        self.schedule_enabled = schedule_enabled
+        self.schedule_time = schedule_time
+
+
+class GlobalRepository:
+    """Repository for global operations"""
+    
+    def __init__(self, db: MultiUserDatabase):
+        self.db = db
+    
+    def get_global_config(self) -> Optional[GlobalConfig]:
+        """Get global configuration"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM global_config WHERE id = 1")
+        row = cursor.fetchone()
+        conn.close()
+        
+        if row:
+            return GlobalConfig(
+                current_day=row["current_day"],
+                english_playlist=row["english_playlist"],
+                history_playlist=row["history_playlist"],
+                polity_playlist=row["polity_playlist"],
+                geography_playlist=row["geography_playlist"],
+                economics_playlist=row["economics_playlist"],
+                english_index=row["english_index"],
+                history_index=row["history_index"],
+                polity_index=row["polity_index"],
+                geography_index=row["geography_index"],
+                economics_index=row["economics_index"],
+                schedule_enabled=bool(row["schedule_enabled"]),
+                schedule_time=row["schedule_time"]
+            )
+        return None
+    
+    def update_global_config(self, config: GlobalConfig) -> bool:
+        """Update global configuration"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute("""
+                UPDATE global_config SET
+                    current_day = ?,
+                    english_playlist = ?, history_playlist = ?, polity_playlist = ?,
+                    geography_playlist = ?, economics_playlist = ?,
+                    english_index = ?, history_index = ?, polity_index = ?,
+                    geography_index = ?, economics_index = ?,
+                    schedule_enabled = ?, schedule_time = ?,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = 1
+            """, (
+                config.current_day,
+                config.english_playlist, config.history_playlist, config.polity_playlist,
+                config.geography_playlist, config.economics_playlist,
+                config.english_index, config.history_index, config.polity_index,
+                config.geography_index, config.economics_index,
+                config.schedule_enabled, config.schedule_time
+            ))
+            conn.commit()
+            return True
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+    
+    # Global playlist schedule operations
+    def get_global_playlist_schedule(self, subject_name: str) -> Optional[dict]:
+        """Get schedule for a specific playlist (global)"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT subject_name, start_date, frequency, selected_days, last_sent_date
+            FROM global_playlist_schedules 
+            WHERE subject_name = ?
+        """, (subject_name,))
+        row = cursor.fetchone()
+        conn.close()
+        
+        if row:
+            import json
+            return {
+                'subject_name': row['subject_name'],
+                'start_date': row['start_date'],
+                'frequency': row['frequency'],
+                'selected_days': json.loads(row['selected_days']),
+                'last_sent_date': row['last_sent_date']
+            }
+        return None
+    
+    def get_all_global_playlist_schedules(self) -> dict:
+        """Get all global playlist schedules"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT subject_name, start_date, frequency, selected_days, last_sent_date
+            FROM global_playlist_schedules
+        """)
+        rows = cursor.fetchall()
+        conn.close()
+        
+        import json
+        schedules = {}
+        for row in rows:
+            schedules[row['subject_name']] = {
+                'start_date': row['start_date'],
+                'frequency': row['frequency'],
+                'selected_days': json.loads(row['selected_days']),
+                'last_sent_date': row['last_sent_date']
+            }
+        return schedules
+    
+    def upsert_global_playlist_schedule(self, subject_name: str, start_date: str, 
+                                        frequency: str, selected_days: list) -> bool:
+        """Create or update global playlist schedule"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            import json
+            selected_days_json = json.dumps(selected_days)
+            
+            cursor.execute("""
+                INSERT INTO global_playlist_schedules (subject_name, start_date, frequency, selected_days)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(subject_name) 
+                DO UPDATE SET 
+                    start_date = ?,
+                    frequency = ?,
+                    selected_days = ?,
+                    updated_at = CURRENT_TIMESTAMP
+            """, (subject_name, start_date, frequency, selected_days_json,
+                  start_date, frequency, selected_days_json))
+            conn.commit()
+            return True
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+    
+    def update_global_playlist_last_sent(self, subject_name: str, date: str) -> bool:
+        """Update last sent date for a global playlist"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute("""
+                UPDATE global_playlist_schedules 
+                SET last_sent_date = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE subject_name = ?
+            """, (date, subject_name))
+            conn.commit()
+            return cursor.rowcount > 0
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+    
+    def delete_global_playlist_schedule(self, subject_name: str) -> bool:
+        """Delete global playlist schedule"""
+        conn = self.db.get_connection()
+        cursor = conn.cursor()
+        
+        try:
+            cursor.execute("""
+                DELETE FROM global_playlist_schedules 
+                WHERE subject_name = ?
+            """, (subject_name,))
+            conn.commit()
+            return cursor.rowcount > 0
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()

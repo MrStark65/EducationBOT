@@ -66,3 +66,32 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+/* Fix for white text in input fields */
+input[type="text"],
+input[type="date"],
+input[type="time"],
+input[type="number"],
+select,
+textarea {
+  color: #333 !important;
+  background: white !important;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  color: #333 !important;
+  background: white !important;
+}
+
+.search-input {
+  color: #333 !important;
+  background: white !important;
+}
+
+.filter-select {
+  color: #333 !important;
+  background: white !important;
+}

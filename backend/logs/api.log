@@ -1,0 +1,25 @@
+2026-02-26 17:02:39 - api - INFO - main:login:159 - Login attempt for user: admin
+2026-02-26 17:02:39 - api - INFO - main:login:171 - Successful login for user: admin
+2026-02-26 17:04:48 - api - INFO - main:login:159 - Login attempt for user: admin
+2026-02-26 17:04:48 - api - WARNING - main:login:162 - Failed login attempt for user: admin
+2026-02-26 17:04:55 - api - INFO - main:login:159 - Login attempt for user: admin
+2026-02-26 17:04:55 - api - INFO - main:login:171 - Successful login for user: admin
+2026-02-26 17:18:56 - api - INFO - main:login:165 - Login attempt for user: admin
+2026-02-26 17:18:56 - api - INFO - main:login:177 - Successful login for user: admin
+2026-02-26 17:45:09 - api - INFO - main:login:169 - Login attempt for user: admin
+2026-02-26 17:45:09 - api - INFO - main:login:181 - Successful login for user: admin
+2026-02-26 17:48:07 - api - ERROR - main:get_system_analytics:1415 - Error fetching system analytics: no such column: chat_id
+2026-02-26 17:48:07 - api - ERROR - main:get_system_analytics:1415 - Error fetching system analytics: no such column: chat_id
+2026-02-26 17:48:07 - api - ERROR - main:get_all_users_analytics:1404 - Error fetching all users analytics: no such column: chat_id
+2026-02-26 17:48:07 - api - ERROR - main:get_all_users_analytics:1404 - Error fetching all users analytics: no such column: chat_id
+2026-02-26 17:48:17 - api - ERROR - main:get_user_analytics:1361 - Error fetching user analytics: no such column: chat_id
+2026-02-26 17:48:24 - api - ERROR - main:get_system_analytics:1415 - Error fetching system analytics: no such column: chat_id
+2026-02-26 17:48:24 - api - ERROR - main:get_system_analytics:1415 - Error fetching system analytics: no such column: chat_id
+2026-02-26 17:48:24 - api - ERROR - main:get_all_users_analytics:1404 - Error fetching all users analytics: no such column: chat_id
+2026-02-26 17:48:24 - api - ERROR - main:get_all_users_analytics:1404 - Error fetching all users analytics: no such column: chat_id
+2026-02-26 17:59:04 - api - INFO - main:login:169 - Login attempt for user: admin
+2026-02-26 17:59:05 - api - INFO - main:login:181 - Successful login for user: admin
+2026-02-26 18:07:46 - api - INFO - main:login:169 - Login attempt for user: admin
+2026-02-26 18:07:47 - api - INFO - main:login:181 - Successful login for user: admin
+2026-02-26 18:16:03 - api - INFO - main:login:169 - Login attempt for user: admin
+2026-02-26 18:16:03 - api - INFO - main:login:181 - Successful login for user: admin

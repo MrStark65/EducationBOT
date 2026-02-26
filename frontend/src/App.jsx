@@ -1,284 +1,488 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import MetricsPanel from './components/MetricsPanel'
-import LogsTable from './components/LogsTable'
-import ConfigPanel from './components/ConfigPanel'
-import AdminActions from './components/AdminActions'
+import Login from './components/Login'
 import ScheduleConfig from './components/ScheduleConfig'
+import PlaylistManager from './components/PlaylistManager'
+import FileLibrary from './components/FileLibrary'
+import UserManagement from './components/UserManagement'
+import AnalyticsDashboard from './components/AnalyticsDashboard'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 function App() {
-  const [metrics, setMetrics] = useState(null)
-  const [logs, setLogs] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('dashboard')
-  const [chatId, setChatId] = useState(localStorage.getItem('chatId') || '')
-  const [allUsers, setAllUsers] = useState([])
-  const [showUserList, setShowUserList] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [authToken, setAuthToken] = useState(null)
+  const [checkingAuth, setCheckingAuth] = useState(true)
 
-  const fetchData = async () => {
-    if (!chatId) return
+  useEffect(() => {
+    const token = localStorage.getItem('auth_token')
+    const expires = localStorage.getItem('token_expires')
     
+    if (token && expires && Date.now() < parseInt(expires)) {
+      verifyToken(token)
+    } else {
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('token_expires')
+      setCheckingAuth(false)
+    }
+  }, [])
+
+  const verifyToken = async (token) => {
     try {
-      const metricsRes = await fetch(`${API_BASE_URL}/api/dashboard/metrics?chat_id=${chatId}`)
-      if (!metricsRes.ok) {
-        if (metricsRes.status === 404) {
-          setLoginError('User not found. Please send /start to the bot first.')
-          setIsLoggedIn(false)
-          localStorage.removeItem('chatId')
+      const response = await fetch(`${API_BASE_URL}/api/auth/verify`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
-        console.error('Failed to fetch metrics:', metricsRes.status)
-        setLoading(false)
-        return
-      }
-      const metricsData = await metricsRes.json()
-      setMetrics(metricsData)
+      })
 
-      const logsRes = await fetch(`${API_BASE_URL}/api/dashboard/logs?chat_id=${chatId}&limit=50`)
-      if (!logsRes.ok) {
-        console.error('Failed to fetch logs:', logsRes.status)
-        setLoading(false)
-        return
+      if (response.ok) {
+        setAuthToken(token)
+        setIsAuthenticated(true)
+      } else {
+        localStorage.removeItem('auth_token')
+        localStorage.removeItem('token_expires')
       }
-      const logsData = await logsRes.json()
-      setLogs(logsData.logs || [])
-
-      setLoading(false)
     } catch (error) {
-      console.error('Error fetching data:', error)
-      setLoading(false)
+      console.error('Token verification failed:', error)
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('token_expires')
+    } finally {
+      setCheckingAuth(false)
     }
   }
 
+  const handleLoginSuccess = (token) => {
+    setAuthToken(token)
+    setIsAuthenticated(true)
+    setCheckingAuth(false)
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('auth_token')
+    localStorage.removeItem('token_expires')
+    setAuthToken(null)
+    setIsAuthenticated(false)
+  }
+
+  if (checkingAuth) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner"></div>
+        <p>Checking authentication...</p>
+      </div>
+    )
+  }
+
+  if (!isAuthenticated) {
+    return <Login onLoginSuccess={handleLoginSuccess} />
+  }
+
+  return <DashboardLayout authToken={authToken} onLogout={handleLogout} />
+}
+
+function DashboardLayout({ authToken, onLogout }) {
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [activeMenu, setActiveMenu] = useState('dashboard')
+  const [allUsers, setAllUsers] = useState([])
+  const [systemStats, setSystemStats] = useState(null)
+  const [loading, setLoading] = useState(true)
+
   const fetchAllUsers = async () => {
     try {
-      const res = await fetch(`${API_BASE_URL}/api/admin/users`)
+      const res = await fetch(`${API_BASE_URL}/api/admin/users`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      })
       if (res.ok) {
         const data = await res.json()
         setAllUsers(data.users || [])
-        
-        // Auto-select first user if none selected
-        if (!chatId && data.users.length > 0) {
-          const firstUser = data.users[0]
-          setChatId(firstUser.chat_id)
-          localStorage.setItem('chatId', firstUser.chat_id)
-        }
       }
     } catch (error) {
       console.error('Error fetching users:', error)
     }
   }
 
-  const handleUserSwitch = (newChatId) => {
-    setChatId(newChatId)
-    localStorage.setItem('chatId', newChatId)
-    setShowUserList(false)
-    setLoading(true)
-    fetchData()
+  const fetchSystemStats = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/system/stats`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      })
+      if (res.ok) {
+        const data = await res.json()
+        setSystemStats(data)
+      }
+    } catch (error) {
+      console.error('Error fetching stats:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGlobalReset = async () => {
+    if (!confirm('⚠️ Reset Global Progress?\n\nThis affects ALL users. Are you sure?')) {
+      return
+    }
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/admin/reset-global`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      })
+
+      if (response.ok) {
+        alert('✅ Global progress reset successfully!')
+        fetchAllUsers()
+        fetchSystemStats()
+      } else {
+        const data = await response.json()
+        alert(`❌ ${data.detail || 'Failed to reset'}`)
+      }
+    } catch (error) {
+      console.error('Error resetting:', error)
+      alert('❌ Failed to reset global progress')
+    }
   }
 
   useEffect(() => {
-    // Fetch users first
     fetchAllUsers()
-    const userInterval = setInterval(fetchAllUsers, 30000) // Refresh users every 30s
-    
-    return () => {
-      clearInterval(userInterval)
-    }
+    fetchSystemStats()
+    const interval = setInterval(() => {
+      fetchAllUsers()
+      fetchSystemStats()
+    }, 30000)
+    return () => clearInterval(interval)
   }, [])
 
-  useEffect(() => {
-    if (chatId) {
-      fetchData()
-      const interval = setInterval(fetchData, 5000)
-      return () => clearInterval(interval)
-    }
-  }, [chatId])
+  const menuItems = [
+    { id: 'dashboard', icon: '📊', label: 'Dashboard', badge: null },
+    { id: 'analytics', icon: '📈', label: 'Analytics', badge: null },
+    { id: 'schedule', icon: '⏰', label: 'Schedule', badge: null },
+    { id: 'playlists', icon: '📚', label: 'Playlists', badge: null },
+    { id: 'files', icon: '📁', label: 'File Library', badge: null },
+    { id: 'users', icon: '👥', label: 'Users', badge: allUsers.length },
+    { id: 'user-management', icon: '🛡️', label: 'User Management', badge: null },
+    { id: 'system', icon: '⚙️', label: 'System', badge: systemStats?.errors?.recent || null },
+  ]
 
-  if (loading && chatId) {
-    return (
-      <div className="loading-screen">
-        <div className="loader"></div>
-        <p>Loading Officer Priya System...</p>
-      </div>
-    )
-  }
-
-  // Show empty state if no users registered
-  if (allUsers.length === 0) {
-    return (
-      <div className="app">
-        <header className="header">
-          <div className="header-content">
-            <div className="logo">
-              <span className="logo-icon">🎖️</span>
+  return (
+    <div className="dastone-layout">
+      {/* Sidebar */}
+      <aside className={`dastone-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
+        <div className="sidebar-header">
+          <div className="sidebar-logo">
+            <span className="logo-icon">🎖️</span>
+            {sidebarOpen && (
               <div className="logo-text">
                 <h1>Officer Priya</h1>
-                <p>CDS Preparation System</p>
+                <p>CDS System</p>
               </div>
+            )}
+          </div>
+        </div>
+
+        <nav className="sidebar-nav">
+          {menuItems.map(item => (
+            <button
+              key={item.id}
+              className={`nav-item ${activeMenu === item.id ? 'active' : ''}`}
+              onClick={() => setActiveMenu(item.id)}
+              title={item.label}
+            >
+              <span className="nav-icon">{item.icon}</span>
+              {sidebarOpen && (
+                <>
+                  <span className="nav-label">{item.label}</span>
+                  {item.badge && <span className="nav-badge">{item.badge}</span>}
+                </>
+              )}
+            </button>
+          ))}
+        </nav>
+
+        <div className="sidebar-footer">
+          <button className="nav-item" onClick={onLogout} title="Logout">
+            <span className="nav-icon">🚪</span>
+            {sidebarOpen && <span className="nav-label">Logout</span>}
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <div className="dastone-main">
+        {/* Top Bar */}
+        <header className="dastone-topbar">
+          <button 
+            className="sidebar-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+          >
+            <span className="toggle-icon">{sidebarOpen ? '◀' : '▶'}</span>
+          </button>
+
+          <div className="topbar-title">
+            <h2>{menuItems.find(m => m.id === activeMenu)?.label || 'Dashboard'}</h2>
+            <p className="breadcrumb">Home / {menuItems.find(m => m.id === activeMenu)?.label}</p>
+          </div>
+
+          <div className="topbar-actions">
+            <div className="global-badge">
+              <span className="badge-icon">🌍</span>
+              <span className="badge-text">Global Mode</span>
             </div>
+            <button className="btn-icon" onClick={handleGlobalReset} title="Reset Global">
+              🔄
+            </button>
           </div>
         </header>
 
-        <main className="main-content">
-          <div className="empty-state">
-            <div className="empty-icon">👥</div>
-            <h2>No Users Registered Yet</h2>
-            <p>To get started, send <strong>/start</strong> to @OfficerPriyaBot on Telegram</p>
-            <div className="empty-steps">
-              <div className="step">
-                <span className="step-number">1</span>
-                <span className="step-text">Open Telegram</span>
-              </div>
-              <div className="step">
-                <span className="step-number">2</span>
-                <span className="step-text">Search for @OfficerPriyaBot</span>
-              </div>
-              <div className="step">
-                <span className="step-number">3</span>
-                <span className="step-text">Send /start command</span>
-              </div>
-              <div className="step">
-                <span className="step-number">4</span>
-                <span className="step-text">Refresh this page</span>
-              </div>
-            </div>
-            <button onClick={fetchAllUsers} className="refresh-button">
-              🔄 Refresh
-            </button>
-          </div>
+        {/* Content Area */}
+        <main className="dastone-content">
+          {activeMenu === 'dashboard' && (
+            <DashboardView 
+              users={allUsers} 
+              stats={systemStats} 
+              loading={loading}
+              authToken={authToken}
+            />
+          )}
+          {activeMenu === 'analytics' && (
+            <AnalyticsDashboard token={authToken} />
+          )}
+          {activeMenu === 'schedule' && (
+            <ScheduleView authToken={authToken} />
+          )}
+          {activeMenu === 'playlists' && (
+            <PlaylistsView authToken={authToken} />
+          )}
+          {activeMenu === 'files' && (
+            <FilesView authToken={authToken} />
+          )}
+          {activeMenu === 'users' && (
+            <UsersView users={allUsers} loading={loading} />
+          )}
+          {activeMenu === 'user-management' && (
+            <UserManagement token={authToken} />
+          )}
+          {activeMenu === 'system' && (
+            <SystemView stats={systemStats} authToken={authToken} />
+          )}
         </main>
-
-        <footer className="footer">
-          <p>Built with ❤️ for CDS OTA Preparation</p>
-        </footer>
       </div>
-    )
+    </div>
+  )
+}
+
+// Dashboard View
+function DashboardView({ users, stats, loading, authToken }) {
+  if (loading) {
+    return <div className="loading-content"><div className="spinner"></div></div>
   }
 
   return (
-    <div className="app">
-      <header className="header">
-        <div className="header-content">
-          <div className="logo">
-            <span className="logo-icon">🎖️</span>
-            <div className="logo-text">
-              <h1>Officer Priya</h1>
-              <p>CDS Preparation System</p>
-            </div>
-          </div>
-          <div className="header-stats">
-            <div className="current-user" onClick={() => setShowUserList(!showUserList)}>
-              <span className="user-icon">👤</span>
-              <div className="user-info">
-                <span className="user-name">{metrics?.user_name || 'User'}</span>
-                <span className="user-id">ID: {chatId}</span>
-              </div>
-              <span className="dropdown-icon">{showUserList ? '▲' : '▼'}</span>
-            </div>
-            <div className="stat-badge">
-              <span className="stat-label">Day</span>
-              <span className="stat-value">{metrics?.current_day || 0}</span>
-            </div>
-            <div className="stat-badge streak">
-              <span className="stat-icon">🔥</span>
-              <span className="stat-value">{metrics?.streak || 0}</span>
-            </div>
-
+    <div className="dashboard-view">
+      {/* Stats Cards */}
+      <div className="stats-grid">
+        <div className="stat-card primary">
+          <div className="stat-icon">👥</div>
+          <div className="stat-content">
+            <h3>{stats?.users?.total || 0}</h3>
+            <p>Total Users</p>
+            <span className="stat-change">+{stats?.users?.active || 0} active</span>
           </div>
         </div>
-        
-        {showUserList && (
-          <div className="user-dropdown">
-            <div className="user-dropdown-header">
-              <h3>All Users ({allUsers.length})</h3>
-              <button onClick={() => setShowUserList(false)} className="close-dropdown">✕</button>
-            </div>
-            <div className="user-list">
-              {allUsers.map((user) => (
-                <div
-                  key={user.id}
-                  className={`user-item ${user.chat_id === chatId ? 'active' : ''}`}
-                  onClick={() => handleUserSwitch(user.chat_id)}
-                >
-                  <div className="user-item-avatar">
-                    {user.first_name?.charAt(0) || '?'}
-                  </div>
-                  <div className="user-item-info">
-                    <div className="user-item-name">
-                      {user.first_name} {user.last_name}
-                      {user.username && <span className="user-item-username">@{user.username}</span>}
+
+        <div className="stat-card success">
+          <div className="stat-icon">✅</div>
+          <div className="stat-content">
+            <h3>{stats?.users?.active || 0}</h3>
+            <p>Active Users</p>
+            <span className="stat-change">Last 24h</span>
+          </div>
+        </div>
+
+        <div className="stat-card warning">
+          <div className="stat-icon">⚠️</div>
+          <div className="stat-content">
+            <h3>{stats?.errors?.recent || 0}</h3>
+            <p>Recent Errors</p>
+            <span className="stat-change">Last 100 logs</span>
+          </div>
+        </div>
+
+        <div className="stat-card info">
+          <div className="stat-icon">💾</div>
+          <div className="stat-content">
+            <h3>{stats?.backups?.total || 0}</h3>
+            <p>Backups</p>
+            <span className="stat-change">Auto-managed</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Users */}
+      <div className="dashboard-section">
+        <div className="section-header">
+          <h3>Recent Users</h3>
+          <span className="section-badge">{users.length} total</span>
+        </div>
+        <div className="users-table">
+          <table>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Streak</th>
+                <th>Progress</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.slice(0, 5).map(user => (
+                <tr key={user.id}>
+                  <td>
+                    <div className="user-cell">
+                      <div className="user-avatar">{user.first_name?.charAt(0)}</div>
+                      <div>
+                        <div className="user-name">{user.first_name} {user.last_name}</div>
+                        <div className="user-username">@{user.username || 'N/A'}</div>
+                      </div>
                     </div>
-                    <div className="user-item-stats">
-                      <span>Day {user.day_count}</span>
-                      <span>•</span>
-                      <span>🔥 {user.streak}</span>
-                      <span>•</span>
-                      <span>{user.total_logs} logs</span>
-                    </div>
-                  </div>
-                  {user.chat_id === chatId && (
-                    <span className="user-item-badge">Current</span>
-                  )}
-                </div>
+                  </td>
+                  <td><span className="badge badge-fire">🔥 {user.streak}</span></td>
+                  <td><span className="badge badge-info">📝 {user.total_logs}</span></td>
+                  <td>
+                    <span className={`status-dot ${user.is_active ? 'active' : 'inactive'}`}>
+                      {user.is_active ? 'Active' : 'Inactive'}
+                    </span>
+                  </td>
+                </tr>
               ))}
-              {allUsers.length === 0 && (
-                <div className="no-users">
-                  <p>No users registered yet</p>
-                  <small>Send /start to @OfficerPriyaBot to register</small>
-                </div>
-              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Schedule View
+function ScheduleView({ authToken }) {
+  return (
+    <div className="content-view">
+      <div className="view-header">
+        <h3>Global Schedule Configuration</h3>
+        <p>Configure when content is delivered to all users</p>
+      </div>
+      <ScheduleConfig chatId={null} authToken={authToken} />
+    </div>
+  )
+}
+
+// Playlists View
+function PlaylistsView({ authToken }) {
+  return (
+    <div className="content-view">
+      <div className="view-header">
+        <h3>Playlist Management</h3>
+        <p>Manage YouTube playlists and scheduling</p>
+      </div>
+      <PlaylistManager chatId={null} authToken={authToken} />
+    </div>
+  )
+}
+
+// Files View
+function FilesView({ authToken }) {
+  return (
+    <div className="content-view">
+      <div className="view-header">
+        <h3>File Library</h3>
+        <p>Upload and manage study materials</p>
+      </div>
+      <FileLibrary chatId={null} authToken={authToken} />
+    </div>
+  )
+}
+
+// Users View
+function UsersView({ users, loading }) {
+  if (loading) {
+    return <div className="loading-content"><div className="spinner"></div></div>
+  }
+
+  return (
+    <div className="content-view">
+      <div className="view-header">
+        <h3>Registered Users</h3>
+        <p>{users.length} users registered</p>
+      </div>
+
+      <div className="users-grid-view">
+        {users.map(user => (
+          <div key={user.id} className="user-card-modern">
+            <div className="user-card-header">
+              <div className="user-avatar-large">{user.first_name?.charAt(0)}</div>
+              <span className={`status-indicator ${user.is_active ? 'active' : 'inactive'}`}></span>
+            </div>
+            <div className="user-card-body">
+              <h4>{user.first_name} {user.last_name}</h4>
+              <p className="user-username">@{user.username || 'N/A'}</p>
+              <p className="user-id">ID: {user.chat_id}</p>
+            </div>
+            <div className="user-card-stats">
+              <div className="stat-item">
+                <span className="stat-icon">🔥</span>
+                <span className="stat-value">{user.streak}</span>
+                <span className="stat-label">Streak</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">📝</span>
+                <span className="stat-value">{user.total_logs}</span>
+                <span className="stat-label">Logs</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-icon">📅</span>
+                <span className="stat-value">{user.day_count}</span>
+                <span className="stat-label">Days</span>
+              </div>
             </div>
           </div>
-        )}
-      </header>
+        ))}
+      </div>
+    </div>
+  )
+}
 
-      <nav className="nav-tabs">
-        <button 
-          className={`nav-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
-          onClick={() => setActiveTab('dashboard')}
-        >
-          <span className="tab-icon">📊</span>
-          <span className="tab-label">Dashboard</span>
-        </button>
-        <button 
-          className={`nav-tab ${activeTab === 'schedule' ? 'active' : ''}`}
-          onClick={() => setActiveTab('schedule')}
-        >
-          <span className="tab-icon">⏰</span>
-          <span className="tab-label">Schedule</span>
-        </button>
-        <button 
-          className={`nav-tab ${activeTab === 'config' ? 'active' : ''}`}
-          onClick={() => setActiveTab('config')}
-        >
-          <span className="tab-icon">⚙️</span>
-          <span className="tab-label">Settings</span>
-        </button>
-      </nav>
+// System View
+function SystemView({ stats, authToken }) {
+  return (
+    <div className="content-view">
+      <div className="view-header">
+        <h3>System Information</h3>
+        <p>Monitor system health and performance</p>
+      </div>
 
-      <main className="main-content">
-        {activeTab === 'dashboard' && (
-          <>
-            <MetricsPanel metrics={metrics} />
-            <AdminActions onAction={fetchData} chatId={chatId} />
-            <LogsTable logs={logs} />
-          </>
-        )}
-        
-        {activeTab === 'schedule' && (
-          <ScheduleConfig onUpdate={fetchData} chatId={chatId} />
-        )}
-        
-        {activeTab === 'config' && (
-          <ConfigPanel onUpdate={fetchData} chatId={chatId} />
-        )}
-      </main>
-
-      <footer className="footer">
-        <p>Built with ❤️ for CDS OTA Preparation</p>
-      </footer>
+      <div className="system-info-grid">
+        <div className="info-card">
+          <h4>System Version</h4>
+          <p className="info-value">{stats?.system?.version || '2.0.0'}</p>
+        </div>
+        <div className="info-card">
+          <h4>Total Errors</h4>
+          <p className="info-value">{stats?.errors?.total || 0}</p>
+        </div>
+        <div className="info-card">
+          <h4>Latest Backup</h4>
+          <p className="info-value">
+            {stats?.backups?.latest?.created ? 
+              new Date(stats.backups.latest.created).toLocaleString() : 
+              'No backups'}
+          </p>
+        </div>
+        <div className="info-card">
+          <h4>Uptime</h4>
+          <p className="info-value">{stats?.system?.uptime || 'N/A'}</p>
+        </div>
+      </div>
     </div>
   )
 }
