@@ -1086,6 +1086,9 @@ async def get_schedule(chat_id: str = Query(None, description="User's Telegram c
         if not config:
             raise HTTPException(status_code=500, detail="Global configuration not found")
         
+        # Debug logging
+        print(f"🔍 GET_SCHEDULE API: schedule_time = '{config.schedule_time}' (type: {type(config.schedule_time).__name__})")
+        
         return {
             "enabled": config.schedule_enabled,
             "time": config.schedule_time
