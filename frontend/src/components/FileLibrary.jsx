@@ -24,6 +24,9 @@ function FileLibrary({ chatId, authToken }) {
     if (authToken) {
       fetchFiles();
       fetchScheduledFiles();
+      // Refresh scheduled files every 30 seconds
+      const interval = setInterval(fetchScheduledFiles, 30000);
+      return () => clearInterval(interval);
     }
   }, [searchTerm, filterType, authToken]);
 

@@ -134,9 +134,11 @@ FORMATTING RULES for playlist/schedule queries:
   🗣️ English
   🌍 Geography
   
-  Videos sent at 07:00 AM daily 📬
+  Videos sent at {schedule_time} daily 📬
   
   - Officer Priya 🎖️"
+  
+  NOTE: Use the actual schedule_time from context, not a hardcoded time!
   
 IMPORTANT: Each subject MUST be on a separate line with proper line breaks (\n)
 
@@ -307,8 +309,15 @@ Tone: Friendly, supportive, professional, motivating, personalized, conversation
                                 context_info += subjects_str + "\n"
                             else:
                                 context_info += "No subjects\n"
+                        
+                        # Add schedule time for weekly view
+                        schedule_time = schedule_data.get('schedule_time', 'Not set')
+                        context_info += f"\nSchedule time: {schedule_time}\n"
+                        context_info += f"\nFORMATTING: Show day-by-day schedule with subjects on separate lines.\n"
+                        context_info += f"At the end, mention: 'Videos sent at {schedule_time} daily 📬'\n"
                     
-                    context_info += f"\nSchedule time: {schedule_data.get('schedule_time', 'Not set')}\n"
+                    if schedule_type != 'weekly':
+                        context_info += f"\nSchedule time: {schedule_data.get('schedule_time', 'Not set')}\n"
                     context_info += "\nIMPORTANT: Present this schedule information in a clear, formatted way in your response.\n"
                 
                 messages.append({"role": "system", "content": context_info})
