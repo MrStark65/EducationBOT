@@ -112,7 +112,7 @@ The bot will automatically start with the backend and listen for commands.
 ## Credentials
 
 - **Telegram Bot**: @OfficerPriyaBot
-- **Bot Token**: `8765768664:AAH-2l3xIeKcqRB7ZbKEa7pUOlOP5P4EaCs`
+- **Bot Token**: (configured in .env)
 - **Admin Login**: username=`admin`, password=`admin123`
 - **GROQ API**: Configured
 - **YouTube API**: Configured
