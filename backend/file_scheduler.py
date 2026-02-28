@@ -15,8 +15,12 @@ from multi_user_database import MultiUserDatabase
 from logger import app_logger
 import os
 from dotenv import load_dotenv
+import pytz
 
 load_dotenv()
+
+# Set timezone to Indian Standard Time
+IST = pytz.timezone('Asia/Kolkata')
 
 class FileScheduler:
     def __init__(self):
@@ -34,14 +38,15 @@ class FileScheduler:
         conn.row_factory = sqlite3.Row
         cursor = conn.cursor()
         
-        now = datetime.now().strftime("%Y-%m-%d %H:%M")
+        # Get current time in IST
+        now = datetime.now(IST).strftime("%Y-%m-%d %H:%M")
         
         # First, get ALL scheduled files for debugging
         cursor.execute("SELECT * FROM scheduled_files ORDER BY scheduled_time ASC")
         all_schedules = [dict(row) for row in cursor.fetchall()]
         
         if all_schedules:
-            print(f"\n📋 ALL SCHEDULED FILES (Current time: {now}):")
+            print(f"\n📋 ALL SCHEDULED FILES (Current IST time: {now}):")
             for s in all_schedules:
                 print(f"   ID: {s['id']}, Time: {s['scheduled_time']}, Status: {s['status']}")
         
@@ -174,8 +179,8 @@ class FileScheduler:
                 self._check_count = 0
             self._check_count += 1
             if self._check_count % 10 == 0:
-                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                print(f"\n⏰ [{now}] No pending schedules")
+                now = datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S")
+                print(f"\n⏰ [{now} IST] No pending schedules")
             else:
                 print(".", end="", flush=True)
     

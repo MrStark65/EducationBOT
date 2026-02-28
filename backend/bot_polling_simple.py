@@ -387,7 +387,8 @@ def get_weekly_schedule():
             })
         
         return {
-            "schedule_time": config.schedule_time,
+            "schedule_time": config.schedule_time.strftime("%I:%M %p") if hasattr(config.schedule_time, 'strftime') else datetime.strptime(config.schedule_time, "%H:%M").strftime("%I:%M %p"),
+            "schedule_time_24hr": config.schedule_time if isinstance(config.schedule_time, str) else config.schedule_time.strftime("%H:%M"),
             "current_day": config.current_day,
             "weekly_schedule": weekly_schedule
         }

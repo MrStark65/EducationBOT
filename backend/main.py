@@ -1515,6 +1515,9 @@ async def get_scheduled_files(payload: dict = Depends(verify_token)):
     """Get all scheduled files with their status"""
     try:
         from datetime import datetime
+        import pytz
+        
+        IST = pytz.timezone('Asia/Kolkata')
         
         conn = db.get_connection()
         cursor = conn.cursor()
@@ -1542,13 +1545,14 @@ async def get_scheduled_files(payload: dict = Depends(verify_token)):
         
         conn.close()
         
-        # Add current server time for debugging
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # Add current server time in IST for debugging
+        current_time_ist = datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S")
         
         return {
             "success": True,
             "schedules": schedules,
-            "current_server_time": current_time,
+            "current_server_time_ist": current_time_ist,
+            "timezone": "Asia/Kolkata (IST)",
             "total": len(schedules)
         }
         

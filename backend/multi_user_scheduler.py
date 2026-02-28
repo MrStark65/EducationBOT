@@ -9,8 +9,12 @@ from multi_user_database import MultiUserDatabase
 from user_repository import UserRepository, GlobalRepository, UserDailyLog
 from video_selector import VideoSelector
 from telegram_bot import TelegramBot
+import pytz
 
 load_dotenv()
+
+# Set timezone to Indian Standard Time
+IST = pytz.timezone('Asia/Kolkata')
 
 class MultiUserScheduler:
     """Schedule and send daily messages automatically - ALL users get SAME content"""
@@ -80,8 +84,8 @@ class MultiUserScheduler:
     async def send_daily_message_to_all_users(self):
         """Send SAME content to ALL users"""
         try:
-            today = datetime.now().strftime("%Y-%m-%d")
-            today_weekday = datetime.now().weekday()  # 0=Monday, 6=Sunday
+            today = datetime.now(IST).strftime("%Y-%m-%d")
+            today_weekday = datetime.now(IST).weekday()  # 0=Monday, 6=Sunday
             
             # Get global config
             config = self.global_repo.get_global_config()
@@ -232,7 +236,7 @@ class MultiUserScheduler:
     
     async def check_and_send(self):
         """Check if it's time to send and send to ALL users"""
-        now = datetime.now()
+        now = datetime.now(IST)
         current_time = now.strftime("%H:%M")
         current_date = now.strftime("%Y-%m-%d")
         
@@ -272,7 +276,7 @@ class MultiUserScheduler:
                 await self.check_and_send()
                 
                 # Clear sent_today flag at midnight
-                now = datetime.now()
+                now = datetime.now(IST)
                 if now.hour == 0 and now.minute == 0:
                     self.sent_today = False
                     print("\n🔄 New day - ready to send")
