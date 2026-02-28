@@ -405,6 +405,7 @@ def get_weekly_schedule():
 
 def format_time_to_12hr(time_str):
     """Convert 24-hour time string to 12-hour format with AM/PM"""
+    from datetime import datetime
     try:
         if isinstance(time_str, str):
             time_obj = datetime.strptime(time_str, "%H:%M")
