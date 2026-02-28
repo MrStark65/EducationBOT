@@ -1419,20 +1419,19 @@ async def schedule_file(
                 file_id TEXT NOT NULL,
                 scheduled_time TIMESTAMP NOT NULL,
                 status TEXT DEFAULT 'pending',
-                created_by TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
         
         cursor.execute("""
-            INSERT INTO scheduled_files (file_id, scheduled_time, created_by)
-            VALUES (?, ?, ?)
-        """, (file_id, scheduled_time, payload.get("username", "admin")))
+            INSERT INTO scheduled_files (file_id, scheduled_time)
+            VALUES (?, ?)
+        """, (file_id, scheduled_time))
         
         conn.commit()
         conn.close()
         
-        api_logger.info(f"File {file_id} scheduled for {scheduled_time} by {payload.get('username')}")
+        api_logger.info(f"File {file_id} scheduled for {scheduled_time}")
         
         return {
             "success": True,
