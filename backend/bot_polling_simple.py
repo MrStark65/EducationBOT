@@ -55,7 +55,9 @@ def get_ai_response_with_context(user_message, chat_id, user_name="User"):
         schedule_keywords = [
             'schedule', 'today', 'tomorrow', 'what do i have', 'what subjects',
             'when do i get', 'what am i studying', 'what will i study',
-            'show me schedule', 'my schedule', 'weekly schedule', 'this week'
+            'show me schedule', 'my schedule', 'weekly schedule', 'this week',
+            'time of content', 'content time', 'what time', 'timing', 'time table',
+            'timetable', 'send time', 'delivery time', 'when will i receive'
         ]
         
         # Check if user is asking about days per subject or playlist lengths
