@@ -15,14 +15,36 @@ function FileLibrary({ chatId, authToken }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleTime, setScheduleTime] = useState('09:00');
+  const [scheduledFiles, setScheduledFiles] = useState([]);
+  const [showScheduledFiles, setShowScheduledFiles] = useState(false);
 
   const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
   useEffect(() => {
     if (authToken) {
       fetchFiles();
+      fetchScheduledFiles();
     }
   }, [searchTerm, filterType, authToken]);
+
+  const fetchScheduledFiles = async () => {
+    if (!authToken) return;
+    
+    try {
+      const response = await fetch(`${API_URL}/api/scheduled-files`, {
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setScheduledFiles(data.schedules || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch scheduled files:', err);
+    }
+  };
 
   const fetchFiles = async () => {
     if (!authToken) {
@@ -222,6 +244,7 @@ function FileLibrary({ chatId, authToken }) {
         setSelectedFile(null);
         setScheduleDate('');
         setScheduleTime('09:00');
+        fetchScheduledFiles(); // Refresh scheduled files list
       } else {
         const data = await response.json();
         setError(data.detail || 'Failed to schedule file');
@@ -249,6 +272,52 @@ function FileLibrary({ chatId, authToken }) {
     <div className="file-library">
       {error && <div className="alert alert-error">{error}</div>}
       {success && <div className="alert alert-success">{success}</div>}
+
+      {/* Scheduled Files Section */}
+      <div className="scheduled-files-section">
+        <button 
+          className="toggle-scheduled-btn"
+          onClick={() => setShowScheduledFiles(!showScheduledFiles)}
+        >
+          📅 Scheduled Files ({scheduledFiles.filter(f => f.status === 'pending').length})
+          {showScheduledFiles ? ' ▼' : ' ▶'}
+        </button>
+        
+        {showScheduledFiles && (
+          <div className="scheduled-files-list">
+            {scheduledFiles.length === 0 ? (
+              <p className="empty-hint">No scheduled files</p>
+            ) : (
+              <table className="scheduled-table">
+                <thead>
+                  <tr>
+                    <th>File Name</th>
+                    <th>Scheduled Time</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scheduledFiles.map((schedule) => (
+                    <tr key={schedule.id} className={`status-${schedule.status}`}>
+                      <td>{schedule.file_name}</td>
+                      <td>{schedule.scheduled_time}</td>
+                      <td>
+                        <span className={`status-badge status-${schedule.status}`}>
+                          {schedule.status === 'pending' && '⏳ Pending'}
+                          {schedule.status === 'sent' && '✅ Sent'}
+                          {schedule.status === 'failed' && '❌ Failed'}
+                        </span>
+                      </td>
+                      <td>{new Date(schedule.created_at).toLocaleString()}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
+        )}
+      </div>
 
       <div className="file-controls">
         <div className="search-filter">

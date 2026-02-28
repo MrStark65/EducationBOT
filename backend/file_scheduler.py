@@ -36,6 +36,16 @@ class FileScheduler:
         
         now = datetime.now().strftime("%Y-%m-%d %H:%M")
         
+        # First, get ALL scheduled files for debugging
+        cursor.execute("SELECT * FROM scheduled_files ORDER BY scheduled_time ASC")
+        all_schedules = [dict(row) for row in cursor.fetchall()]
+        
+        if all_schedules:
+            print(f"\n📋 ALL SCHEDULED FILES (Current time: {now}):")
+            for s in all_schedules:
+                print(f"   ID: {s['id']}, Time: {s['scheduled_time']}, Status: {s['status']}")
+        
+        # Now get pending schedules
         cursor.execute("""
             SELECT * FROM scheduled_files
             WHERE status = 'pending'
@@ -159,7 +169,15 @@ class FileScheduler:
             for schedule in schedules:
                 await self.send_scheduled_file(schedule)
         else:
-            print(".", end="", flush=True)
+            # Show timestamp every 10 checks (10 minutes)
+            if not hasattr(self, '_check_count'):
+                self._check_count = 0
+            self._check_count += 1
+            if self._check_count % 10 == 0:
+                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                print(f"\n⏰ [{now}] No pending schedules")
+            else:
+                print(".", end="", flush=True)
     
     async def run(self):
         """Main scheduler loop"""

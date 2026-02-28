@@ -1510,6 +1510,53 @@ async def delete_playlist_schedule(subject: str, chat_id: str = Query(None, desc
 # ==================== FILE MANAGEMENT ENDPOINTS ====================
 
 
+@app.get("/api/scheduled-files")
+async def get_scheduled_files(payload: dict = Depends(verify_token)):
+    """Get all scheduled files with their status"""
+    try:
+        from datetime import datetime
+        
+        conn = db.get_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            SELECT sf.*, f.original_name, f.file_type, f.file_size
+            FROM scheduled_files sf
+            LEFT JOIN files f ON sf.file_id = f.file_id
+            ORDER BY sf.scheduled_time DESC
+        """)
+        
+        schedules = []
+        for row in cursor.fetchall():
+            schedule = {
+                "id": row[0],
+                "file_id": row[1],
+                "scheduled_time": row[2],
+                "status": row[3],
+                "created_at": row[4],
+                "file_name": row[5] if len(row) > 5 else "Unknown",
+                "file_type": row[6] if len(row) > 6 else "unknown",
+                "file_size": row[7] if len(row) > 7 else 0
+            }
+            schedules.append(schedule)
+        
+        conn.close()
+        
+        # Add current server time for debugging
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        return {
+            "success": True,
+            "schedules": schedules,
+            "current_server_time": current_time,
+            "total": len(schedules)
+        }
+        
+    except Exception as e:
+        api_logger.error(f"Error getting scheduled files: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/api/files")
 async def get_files(
     limit: int = Query(100, description="Maximum number of files to return"),
