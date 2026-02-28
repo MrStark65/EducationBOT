@@ -15,12 +15,9 @@ Total Cost: **₹0 (100% Free)**
 
 ### Update Backend for Production
 
-Create `backend/Procfile`:
-```
-web: uvicorn main:app --host 0.0.0.0 --port $PORT
-bot: python bot_simple.py
-scheduler: python multi_user_scheduler.py
-```
+The backend now includes everything (API, bot, and schedulers) in one process.
+
+No Procfile needed - everything runs from main.py!
 
 ### Update requirements.txt
 Make sure all dependencies are listed:
@@ -38,7 +35,7 @@ pip freeze > requirements.txt
 2. Sign up with GitHub
 3. Connect your repository
 
-### 2.2 Create Web Service (API)
+### 2.2 Create Web Service (Backend - includes everything)
 1. Click "New +" → "Web Service"
 2. Connect your GitHub repository
 3. Configure:
@@ -57,37 +54,13 @@ pip freeze > requirements.txt
 
 5. Click "Create Web Service"
 
-### 2.3 Create Background Worker (Bot)
-1. Click "New +" → "Background Worker"
-2. Connect same repository
-3. Configure:
-   - **Name**: `officer-priya-bot`
-   - **Region**: Singapore
-   - **Branch**: `main`
-   - **Root Directory**: `backend`
-   - **Runtime**: Python 3
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `python bot_simple.py`
-   - **Instance Type**: Free
+The backend automatically includes:
+- REST API
+- Telegram Bot (webhook)
+- File Scheduler
+- Daily Content Scheduler
 
-4. Add same environment variables
-5. Click "Create Background Worker"
-
-### 2.4 Create Background Worker (Scheduler)
-1. Click "New +" → "Background Worker"
-2. Connect same repository
-3. Configure:
-   - **Name**: `officer-priya-scheduler`
-   - **Region**: Singapore
-   - **Branch**: `main`
-   - **Root Directory**: `backend`
-   - **Runtime**: Python 3
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `python multi_user_scheduler.py`
-   - **Instance Type**: Free
-
-4. Add same environment variables
-5. Click "Create Background Worker"
+No need for separate worker services!
 
 ### 2.5 Note Your API URL
 After deployment, you'll get a URL like:

@@ -19,10 +19,17 @@ function FileLibrary({ chatId, authToken }) {
   const API_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
   useEffect(() => {
-    fetchFiles();
-  }, [searchTerm, filterType]);
+    if (authToken) {
+      fetchFiles();
+    }
+  }, [searchTerm, filterType, authToken]);
 
   const fetchFiles = async () => {
+    if (!authToken) {
+      setLoading(false);
+      return;
+    }
+    
     try {
       let url = `${API_URL}/api/files?limit=100`;
       if (searchTerm) url += `&search=${encodeURIComponent(searchTerm)}`;
@@ -34,15 +41,23 @@ function FileLibrary({ chatId, authToken }) {
         }
       });
 
+      if (response.status === 401) {
+        // Token expired or invalid - redirect to login
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('token_expires');
+        window.location.reload();
+        return;
+      }
+
       if (!response.ok) {
-        throw new Error('Failed to fetch files');
+        throw new Error(`Failed to fetch files: ${response.status}`);
       }
 
       const data = await response.json();
       setFiles(data.files || []);
       setLoading(false);
     } catch (err) {
-      setError('Failed to load files');
+      setError('Failed to load files: ' + err.message);
       setLoading(false);
     }
   };
@@ -73,6 +88,14 @@ function FileLibrary({ chatId, authToken }) {
         body: formData
       });
 
+      if (response.status === 401) {
+        // Token expired or invalid - redirect to login
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('token_expires');
+        window.location.reload();
+        return;
+      }
+
       if (response.ok) {
         setSuccess('File uploaded successfully!');
         fetchFiles();
@@ -99,14 +122,23 @@ function FileLibrary({ chatId, authToken }) {
         }
       });
 
+      if (response.status === 401) {
+        // Token expired or invalid - redirect to login
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('token_expires');
+        window.location.reload();
+        return;
+      }
+
       if (response.ok) {
         setSuccess('File deleted successfully');
         fetchFiles();
       } else {
-        setError('Failed to delete file');
+        const data = await response.json();
+        setError(`Failed to delete file: ${data.detail || 'Unknown error'}`);
       }
     } catch (err) {
-      setError('Failed to delete file');
+      setError(`Failed to delete file: ${err.message}`);
     }
   };
 
@@ -164,13 +196,53 @@ function FileLibrary({ chatId, authToken }) {
   };
 
   const handleScheduleFile = async () => {
-    // TODO: Implement file scheduling
-    alert('File scheduling coming soon!');
-    setShowScheduleModal(false);
+    if (!scheduleDate || !scheduleTime) {
+      setError('Please select both date and time');
+      return;
+    }
+
+    try {
+      const scheduledDateTime = `${scheduleDate} ${scheduleTime}`;
+      
+      const response = await fetch(`${API_URL}/api/admin/schedule-file`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify({
+          file_id: selectedFile.file_id,
+          scheduled_time: scheduledDateTime
+        })
+      });
+
+      if (response.ok) {
+        setSuccess(`File scheduled for ${scheduleDate} at ${scheduleTime}`);
+        setShowScheduleModal(false);
+        setSelectedFile(null);
+        setScheduleDate('');
+        setScheduleTime('09:00');
+      } else {
+        const data = await response.json();
+        setError(data.detail || 'Failed to schedule file');
+      }
+    } catch (err) {
+      setError('Failed to schedule file');
+    }
   };
 
   if (loading) {
     return <div className="loading">Loading files...</div>;
+  }
+
+  if (!authToken) {
+    return (
+      <div className="file-library">
+        <div className="alert alert-error">
+          Authentication required. Please log out and log back in.
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -248,9 +320,16 @@ function FileLibrary({ chatId, authToken }) {
                   onClick={() => handleSendFile(file)}
                   className="btn-send"
                   disabled={sending && sendingFileId === file.file_id}
-                  title="Send to all users"
+                  title="Send to all users now"
                 >
                   {sending && sendingFileId === file.file_id ? '⏳' : '📤'}
+                </button>
+                <button
+                  onClick={() => openScheduleModal(file)}
+                  className="btn-schedule"
+                  title="Schedule for later"
+                >
+                  📅
                 </button>
                 <button
                   onClick={() => handleDeleteFile(file.file_id)}
@@ -268,27 +347,59 @@ function FileLibrary({ chatId, authToken }) {
       {showScheduleModal && (
         <div className="modal-overlay" onClick={() => setShowScheduleModal(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Schedule File Delivery</h3>
-            <div className="form-group">
-              <label>Date:</label>
-              <input
-                type="date"
-                value={scheduleDate}
-                onChange={(e) => setScheduleDate(e.target.value)}
-              />
+            <div className="modal-header">
+              <h3>📅 Schedule File Delivery</h3>
+              <button className="modal-close" onClick={() => setShowScheduleModal(false)}>×</button>
             </div>
-            <div className="form-group">
-              <label>Time:</label>
-              <input
-                type="time"
-                value={scheduleTime}
-                onChange={(e) => setScheduleTime(e.target.value)}
-              />
+            
+            {selectedFile && (
+              <div className="modal-file-info">
+                <p><strong>File:</strong> {selectedFile.original_name}</p>
+                <p><strong>Size:</strong> {(selectedFile.file_size / 1024 / 1024).toFixed(2)} MB</p>
+              </div>
+            )}
+            
+            <div className="modal-body">
+              <div className="form-group">
+                <label>📅 Select Date:</label>
+                <input
+                  type="date"
+                  value={scheduleDate}
+                  onChange={(e) => setScheduleDate(e.target.value)}
+                  min={new Date().toISOString().split('T')[0]}
+                  required
+                />
+              </div>
+              
+              <div className="form-group">
+                <label>⏰ Select Time:</label>
+                <input
+                  type="time"
+                  value={scheduleTime}
+                  onChange={(e) => setScheduleTime(e.target.value)}
+                  required
+                />
+              </div>
+              
+              <div className="schedule-preview">
+                {scheduleDate && scheduleTime && (
+                  <p className="preview-text">
+                    📤 File will be sent on <strong>{new Date(scheduleDate).toLocaleDateString()}</strong> at <strong>{scheduleTime}</strong>
+                  </p>
+                )}
+              </div>
             </div>
+            
             <div className="modal-actions">
-              <button onClick={() => setShowScheduleModal(false)}>Cancel</button>
-              <button onClick={handleScheduleFile} className="btn-primary">
-                Schedule
+              <button onClick={() => setShowScheduleModal(false)} className="btn-secondary">
+                Cancel
+              </button>
+              <button 
+                onClick={handleScheduleFile} 
+                className="btn-primary"
+                disabled={!scheduleDate || !scheduleTime}
+              >
+                📅 Schedule Delivery
               </button>
             </div>
           </div>

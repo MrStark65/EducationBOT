@@ -293,15 +293,30 @@ class FileManager:
         conn = self._get_connection()
         cursor = conn.cursor()
         
-        cursor.execute("""
-            SELECT f.*, COUNT(fr.id) as reference_count
-            FROM files f
-            LEFT JOIN file_references fr ON f.id = fr.file_id
-            WHERE f.file_id = ?
-            GROUP BY f.id
-        """, (file_id,))
+        try:
+            # Try with file_references join first
+            cursor.execute("""
+                SELECT f.*, COUNT(fr.id) as reference_count
+                FROM files f
+                LEFT JOIN file_references fr ON f.id = fr.file_id
+                WHERE f.file_id = ?
+                GROUP BY f.id
+            """, (file_id,))
+            
+            row = cursor.fetchone()
+        except sqlite3.OperationalError as e:
+            # If file_references table doesn't exist, query without it
+            if "no such table" in str(e):
+                cursor.execute("""
+                    SELECT *, 0 as reference_count
+                    FROM files
+                    WHERE file_id = ?
+                """, (file_id,))
+                
+                row = cursor.fetchone()
+            else:
+                raise
         
-        row = cursor.fetchone()
         conn.close()
         
         if not row:
@@ -324,29 +339,34 @@ class FileManager:
         
         try:
             # Check if file exists
-            cursor.execute("SELECT id, storage_path FROM files WHERE file_id = ?", (file_id,))
+            cursor.execute("SELECT id, storage_path, file_id FROM files WHERE file_id = ?", (file_id,))
             file_row = cursor.fetchone()
             
             if not file_row:
-                return False, "File not found", None
+                return False, f"File not found with file_id={file_id}", None
             
             file_db_id = file_row['id']
             storage_path = file_row['storage_path']
             
-            # Check for references
-            cursor.execute("""
-                SELECT DISTINCT p.id, p.name
-                FROM file_references fr
-                JOIN content_items ci ON fr.content_item_id = ci.id
-                JOIN playlists p ON ci.playlist_id = p.id
-                WHERE fr.file_id = ?
-            """, (file_db_id,))
-            
-            references = cursor.fetchall()
-            
-            if references:
-                playlist_list = [{'id': r['id'], 'name': r['name']} for r in references]
-                return False, "File is referenced in playlists", playlist_list
+            # Check for references (only if table exists)
+            try:
+                cursor.execute("""
+                    SELECT DISTINCT p.id, p.name
+                    FROM file_references fr
+                    JOIN content_items ci ON fr.content_item_id = ci.id
+                    JOIN playlists p ON ci.playlist_id = p.id
+                    WHERE fr.file_id = ?
+                """, (file_db_id,))
+                
+                references = cursor.fetchall()
+                
+                if references:
+                    playlist_list = [{'id': r['id'], 'name': r['name']} for r in references]
+                    return False, "File is referenced in playlists", playlist_list
+            except sqlite3.OperationalError as e:
+                # Table doesn't exist yet, skip reference check
+                if "no such table" not in str(e):
+                    raise
             
             # Delete from database
             cursor.execute("DELETE FROM files WHERE id = ?", (file_db_id,))

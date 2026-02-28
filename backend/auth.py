@@ -16,7 +16,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 hours
 
 # Default admin credentials (change in production)
 DEFAULT_ADMIN_USERNAME = os.getenv("ADMIN_USERNAME", "admin")
-DEFAULT_ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "admin123")
+DEFAULT_ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "Priya@2003")
 
 
 class AuthManager:
@@ -58,11 +58,14 @@ class AuthManager:
         try:
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             return payload
-        except jwt.ExpiredSignatureError:
+        except jwt.ExpiredSignatureError as e:
+            print(f"Token expired: {e}")
             return None
-        except jwt.InvalidTokenError:
+        except jwt.InvalidTokenError as e:
+            print(f"Invalid token: {e}")
             return None
-        except Exception:
+        except Exception as e:
+            print(f"Token verification error: {e}")
             return None
     
     def change_password(self, username: str, old_password: str, new_password: str) -> bool:

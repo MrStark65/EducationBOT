@@ -1,11 +1,20 @@
 import { useState, useEffect } from 'react'
+// Import shared styles FIRST (before App.css)
+import './styles/variables.css'
+import './styles/layout.css'
+import './styles/components.css'
 import './App.css'
+
 import Login from './components/Login'
 import ScheduleConfig from './components/ScheduleConfig'
+import ScheduleSummary from './components/ScheduleSummary'
 import PlaylistManager from './components/PlaylistManager'
+import PlaylistStatus from './components/PlaylistStatus'
+import BroadcastMessage from './components/BroadcastMessage'
 import FileLibrary from './components/FileLibrary'
 import UserManagement from './components/UserManagement'
 import AnalyticsDashboard from './components/AnalyticsDashboard'
+import DatabaseViewer from './components/DatabaseViewer'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
@@ -75,6 +84,7 @@ function App() {
     )
   }
 
+  // Return ONLY Login component when not authenticated - no wrapper divs!
   if (!isAuthenticated) {
     return <Login onLoginSuccess={handleLoginSuccess} />
   }
@@ -83,11 +93,25 @@ function App() {
 }
 
 function DashboardLayout({ authToken, onLogout }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 1024)
   const [activeMenu, setActiveMenu] = useState('dashboard')
   const [allUsers, setAllUsers] = useState([])
   const [systemStats, setSystemStats] = useState(null)
   const [loading, setLoading] = useState(true)
+
+  // Close sidebar on mobile when clicking outside
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 1024) {
+        setSidebarOpen(true)
+      } else {
+        setSidebarOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const fetchAllUsers = async () => {
     try {
@@ -159,14 +183,34 @@ function DashboardLayout({ authToken, onLogout }) {
     { id: 'analytics', icon: '📈', label: 'Analytics', badge: null },
     { id: 'schedule', icon: '⏰', label: 'Schedule', badge: null },
     { id: 'playlists', icon: '📚', label: 'Playlists', badge: null },
-    { id: 'files', icon: '📁', label: 'File Library', badge: null },
+    { id: 'broadcast', icon: '📢', label: 'Broadcast', badge: null },
     { id: 'users', icon: '👥', label: 'Users', badge: allUsers.length },
     { id: 'user-management', icon: '🛡️', label: 'User Management', badge: null },
+    { id: 'database', icon: '🗄️', label: 'Database', badge: null },
     { id: 'system', icon: '⚙️', label: 'System', badge: systemStats?.errors?.recent || null },
   ]
 
+  const handleMenuClick = (menuId) => {
+    setActiveMenu(menuId)
+    // Close sidebar on mobile after menu click
+    if (window.innerWidth <= 1024) {
+      setSidebarOpen(false)
+    }
+  }
+
+  const handleOverlayClick = () => {
+    if (window.innerWidth <= 1024) {
+      setSidebarOpen(false)
+    }
+  }
+
   return (
     <div className="dastone-layout">
+      {/* Mobile Overlay */}
+      {sidebarOpen && window.innerWidth <= 1024 && (
+        <div className="sidebar-overlay" onClick={handleOverlayClick}></div>
+      )}
+      
       {/* Sidebar */}
       <aside className={`dastone-sidebar ${sidebarOpen ? 'open' : 'closed'}`}>
         <div className="sidebar-header">
@@ -186,7 +230,7 @@ function DashboardLayout({ authToken, onLogout }) {
             <button
               key={item.id}
               className={`nav-item ${activeMenu === item.id ? 'active' : ''}`}
-              onClick={() => setActiveMenu(item.id)}
+              onClick={() => handleMenuClick(item.id)}
               title={item.label}
             >
               <span className="nav-icon">{item.icon}</span>
@@ -254,14 +298,17 @@ function DashboardLayout({ authToken, onLogout }) {
           {activeMenu === 'playlists' && (
             <PlaylistsView authToken={authToken} />
           )}
-          {activeMenu === 'files' && (
-            <FilesView authToken={authToken} />
+          {activeMenu === 'broadcast' && (
+            <BroadcastView authToken={authToken} />
           )}
           {activeMenu === 'users' && (
             <UsersView users={allUsers} loading={loading} />
           )}
           {activeMenu === 'user-management' && (
             <UserManagement token={authToken} />
+          )}
+          {activeMenu === 'database' && (
+            <DatabaseViewer token={authToken} />
           )}
           {activeMenu === 'system' && (
             <SystemView stats={systemStats} authToken={authToken} />
@@ -366,32 +413,83 @@ function DashboardView({ users, stats, loading, authToken }) {
 
 // Schedule View
 function ScheduleView({ authToken }) {
+  const [activeTab, setActiveTab] = useState('summary')
+  
   return (
     <div className="content-view">
       <div className="view-header">
-        <h3>Global Schedule Configuration</h3>
-        <p>Configure when content is delivered to all users</p>
+        <h3>Schedule Management</h3>
+        <p>View and configure content delivery schedule</p>
       </div>
-      <ScheduleConfig chatId={null} authToken={authToken} />
+      
+      <div className="schedule-tabs">
+        <button 
+          className={`tab-button ${activeTab === 'summary' ? 'active' : ''}`}
+          onClick={() => setActiveTab('summary')}
+        >
+          📊 Schedule Overview
+        </button>
+        <button 
+          className={`tab-button ${activeTab === 'config' ? 'active' : ''}`}
+          onClick={() => setActiveTab('config')}
+        >
+          ⚙️ Schedule Config
+        </button>
+      </div>
+      
+      {activeTab === 'summary' && <ScheduleSummary token={authToken} />}
+      {activeTab === 'config' && <ScheduleConfig chatId={null} authToken={authToken} />}
     </div>
   )
 }
 
 // Playlists View
 function PlaylistsView({ authToken }) {
+  const [activeTab, setActiveTab] = useState('manager')
+  
   return (
     <div className="content-view">
       <div className="view-header">
         <h3>Playlist Management</h3>
         <p>Manage YouTube playlists and scheduling</p>
       </div>
-      <PlaylistManager chatId={null} authToken={authToken} />
+      
+      <div className="schedule-tabs">
+        <button 
+          className={`tab-button ${activeTab === 'manager' ? 'active' : ''}`}
+          onClick={() => setActiveTab('manager')}
+        >
+          📚 Playlists & Schedule
+        </button>
+        <button 
+          className={`tab-button ${activeTab === 'status' ? 'active' : ''}`}
+          onClick={() => setActiveTab('status')}
+        >
+          📊 Progress & Status
+        </button>
+      </div>
+      
+      {activeTab === 'manager' && <PlaylistManager chatId={null} authToken={authToken} />}
+      {activeTab === 'status' && <PlaylistStatus token={authToken} />}
     </div>
   )
 }
 
 // Files View
 function FilesView({ authToken }) {
+  console.log('FilesView rendered with authToken:', authToken ? 'present' : 'MISSING');
+  
+  if (!authToken) {
+    return (
+      <div className="content-view">
+        <div className="loading-content">
+          <div className="spinner"></div>
+          <p>Authenticating...</p>
+        </div>
+      </div>
+    )
+  }
+  
   return (
     <div className="content-view">
       <div className="view-header">
@@ -452,14 +550,62 @@ function UsersView({ users, loading }) {
   )
 }
 
+// Broadcast View
+function BroadcastView({ authToken }) {
+  return (
+    <div className="content-view">
+      <BroadcastMessage token={authToken} />
+    </div>
+  )
+}
+
 // System View
 function SystemView({ stats, authToken }) {
+  const [clearing, setClearing] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleClearErrors = async () => {
+    if (!confirm('Clear all system errors? This will remove error logs older than 30 days.')) {
+      return;
+    }
+
+    setClearing(true);
+    setMessage('');
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/system/errors?days=0`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessage(`✅ Cleared ${data.deleted} error(s)`);
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        setMessage('❌ Failed to clear errors');
+      }
+    } catch (err) {
+      setMessage('❌ Error clearing logs');
+    } finally {
+      setClearing(false);
+    }
+  };
+
   return (
     <div className="content-view">
       <div className="view-header">
         <h3>System Information</h3>
         <p>Monitor system health and performance</p>
       </div>
+
+      {message && (
+        <div className={`alert ${message.includes('✅') ? 'alert-success' : 'alert-error'}`}>
+          {message}
+        </div>
+      )}
 
       <div className="system-info-grid">
         <div className="info-card">
@@ -468,7 +614,19 @@ function SystemView({ stats, authToken }) {
         </div>
         <div className="info-card">
           <h4>Total Errors</h4>
-          <p className="info-value">{stats?.errors?.total || 0}</p>
+          <p className="info-value">
+            {stats?.errors?.total || 0}
+            {stats?.errors?.total > 0 && (
+              <button 
+                onClick={handleClearErrors}
+                disabled={clearing}
+                className="btn-clear-errors"
+                style={{ marginLeft: '10px', fontSize: '12px', padding: '4px 8px' }}
+              >
+                {clearing ? 'Clearing...' : '🗑️ Clear'}
+              </button>
+            )}
+          </p>
         </div>
         <div className="info-card">
           <h4>Latest Backup</h4>

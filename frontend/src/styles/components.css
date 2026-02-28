@@ -1,0 +1,438 @@
+/* ============================================================
+   DASTON UI — components.css
+   Officer Priya CDS System
+   ============================================================ */
+
+/* ── Cards ── */
+.card {
+  background: #ffffff;
+  border: 1.5px solid #e8e3db;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(28,25,23,.07);
+}
+
+.card::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: linear-gradient(90deg, #1c1917 0%, #6b6560 55%, transparent 100%);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid #e8e3db;
+  background: #faf9f6;
+}
+
+.card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1c1917;
+  margin: 0;
+}
+
+
+/* ── Stats Cards ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 1.5px solid #e8e3db;
+  border-radius: 20px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 3px rgba(28,25,23,.06);
+  transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.stat-card.primary::before { background: linear-gradient(90deg, #1c1917, #6b6560); }
+.stat-card.success::before { background: linear-gradient(90deg, #15803d, #4ade80); }
+.stat-card.warning::before { background: linear-gradient(90deg, #92600a, #fbbf24); }
+.stat-card.danger::before  { background: linear-gradient(90deg, #b91c1c, #f87171); }
+.stat-card.info::before    { background: linear-gradient(90deg, #1e40af, #60a5fa); }
+
+.stat-card:hover {
+  border-color: #d2ccc2;
+  box-shadow: 0 6px 24px rgba(28,25,23,.09);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+  background: #f3f0eb;
+  border: 1.5px solid #e8e3db;
+}
+
+.stat-content h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  margin: 0 0 3px;
+  color: #1c1917;
+  line-height: 1;
+}
+
+.stat-content p {
+  font-size: 13px;
+  color: #9d978f;
+  margin: 0 0 5px;
+  font-weight: 500;
+}
+
+.stat-change {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #6b6560;
+  background: #f3f0eb;
+  padding: 2px 8px;
+  border-radius: 99px;
+  border: 1px solid #e8e3db;
+}
+
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+  border: 1.5px solid transparent;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: #1c1917;
+  color: #ffffff;
+  border-color: #1c1917;
+  box-shadow: 0 2px 8px rgba(28,25,23,.15);
+}
+
+.btn-primary:hover {
+  background: #3c3732;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(28,25,23,.20);
+}
+
+.btn-secondary {
+  background: #f3f0eb;
+  color: #3c3732;
+  border-color: #e8e3db;
+}
+
+.btn-secondary:hover {
+  background: #ede9e1;
+  border-color: #d2ccc2;
+}
+
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 8px;
+  background: #f3f0eb;
+  border: 1.5px solid #e8e3db;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.18s ease;
+  color: #6b6560;
+}
+
+.btn-icon:hover {
+  background: #ede9e1;
+  color: #1c1917;
+  transform: translateY(-1px);
+}
+
+
+/* ── Tables ── */
+.table-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1.5px solid #e8e3db;
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(28,25,23,.07);
+}
+
+.table-container::before {
+  content: '';
+  display: block;
+  height: 3px;
+  background: linear-gradient(90deg, #1c1917 0%, #6b6560 55%, transparent 100%);
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9d978f;
+  text-transform: uppercase;
+  background: #faf9f6;
+  border-bottom: 1.5px solid #e8e3db;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+}
+
+.data-table th:first-child { padding-left: 22px; }
+.data-table th:last-child  { padding-right: 22px; }
+
+.data-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid #e8e3db;
+  color: #3c3732;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.data-table td:first-child { padding-left: 22px; }
+.data-table td:last-child  { padding-right: 22px; }
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #faf9f6; }
+
+
+/* ── User Cell ── */
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #1c1917;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.user-info { display: flex; flex-direction: column; }
+
+.user-name {
+  font-weight: 600;
+  color: #1c1917;
+  font-size: 13.5px;
+}
+
+.user-username,
+.user-meta {
+  font-size: 12px;
+  color: #9d978f;
+}
+
+
+/* ── Badges ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1.5px solid transparent;
+  white-space: nowrap;
+}
+
+.badge-primary { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+.badge-success { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+.badge-warning { background: #fdf8ec; color: #92600a; border-color: #e8d08a; }
+.badge-danger  { background: #fff1f2; color: #b91c1c; border-color: #fecdd3; }
+.badge-fire    { background: #fdf8ec; color: #92600a; border-color: #e8d08a; }
+.badge-info    { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }
+
+
+/* ── Status Dots ── */
+.status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.status-dot::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot.active   { color: #15803d; }
+.status-dot.active::before   { background: #15803d; }
+.status-dot.inactive { color: #9d978f; }
+.status-dot.inactive::before { background: #c8c1b7; }
+
+
+/* ══════════════════════════════════════════
+   TABS — THE SECOND FIX
+   Before: underline style with var(--primary-500) purple
+   Now: Daston pill tabs, ink-black active state
+   ══════════════════════════════════════════ */
+.schedule-tabs {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1.5px solid #e8e3db;
+  border-radius: 20px;
+  padding: 6px;
+  box-shadow: 0 1px 3px rgba(28,25,23,.06);
+
+  /* Remove old underline style */
+  border-bottom-color: #e8e3db;
+  margin-bottom: 0;
+}
+
+.tab-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  background: transparent;
+  color: #9d978f;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4,0,0.2,1);
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+
+  /* Remove old underline border-bottom */
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.tab-button:hover {
+  background: #f3f0eb;
+  color: #3c3732;
+  border-color: #e8e3db;
+}
+
+.tab-button.active {
+  background: #1c1917;
+  color: #ffffff;
+  border-color: #1c1917;
+  box-shadow: 0 2px 8px rgba(28,25,23,.18);
+}
+
+
+/* ── Loading States ── */
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #faf9f6;
+  color: #9d978f;
+  font-family: 'DM Sans', sans-serif;
+  gap: 16px;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 320px;
+  gap: 16px;
+  color: #9d978f;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  width: 100%;
+}
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid #e8e3db;
+  border-top-color: #1c1917;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+
+/* ── Alerts ── */
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  border: 1.5px solid transparent;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.5;
+}
+
+.alert-success { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+.alert-error   { background: #fff1f2; color: #b91c1c; border-color: #fecdd3; }
+.alert-warning { background: #fdf8ec; color: #92600a; border-color: #e8d08a; }
+.alert-info    { background: #eff6ff; color: #1e40af; border-color: #bfdbfe; }

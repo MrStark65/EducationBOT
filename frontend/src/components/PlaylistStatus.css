@@ -1,0 +1,325 @@
+/* Playlist Status - Full Screen Layout */
+.playlist-status-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 0;
+}
+
+/* Status Header */
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+  flex-shrink: 0;
+}
+
+.status-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.refresh-button {
+  padding: var(--space-2) var(--space-4);
+  background: var(--primary-500);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.refresh-button:hover:not(:disabled) {
+  background: var(--primary-600);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.refresh-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Info Banner */
+.info-banner {
+  background: var(--primary-50);
+  border: 1px solid var(--primary-500);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+  color: var(--primary-600);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Alert Banners */
+.alert-banner {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-4);
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.alert-banner.completed {
+  background: var(--danger-50);
+  border: 1px solid var(--danger-500);
+  color: var(--danger-600);
+}
+
+.alert-banner.warning {
+  background: var(--warning-50);
+  border: 1px solid var(--warning-500);
+  color: var(--warning-600);
+}
+
+/* Playlists Grid */
+.playlists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--space-4);
+  overflow-y: auto;
+  flex: 1;
+}
+
+.playlist-card {
+  background: white;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  transition: all var(--transition-base);
+  height: fit-content;
+}
+
+.playlist-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--primary-500);
+}
+
+.playlist-card.completed {
+  border-color: var(--danger-500);
+  background: var(--danger-50);
+}
+
+/* Card Header */
+.playlist-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.subject-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.subject-emoji {
+  font-size: 36px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+}
+
+.subject-info h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.completed-badge {
+  background: var(--success-50);
+  color: var(--success-600);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--success-500);
+}
+
+/* Progress Info */
+.progress-info {
+  margin-bottom: var(--space-4);
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
+  background: var(--gray-50);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--gray-200);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.stat-label {
+  font-size: 11px;
+  color: var(--gray-600);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+/* Progress Bar */
+.progress-bar-container {
+  width: 100%;
+  height: 32px;
+  background: var(--gray-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: width 0.5s ease;
+  border-radius: var(--radius-full);
+  position: relative;
+}
+
+.progress-bar.success {
+  background: linear-gradient(135deg, var(--success-500), var(--success-600));
+}
+
+.progress-bar.warning {
+  background: linear-gradient(135deg, var(--warning-500), var(--warning-600));
+}
+
+.progress-bar.danger {
+  background: linear-gradient(135deg, var(--danger-500), var(--danger-600));
+}
+
+.progress-text {
+  color: white;
+  font-weight: 700;
+  font-size: 13px;
+  position: relative;
+  z-index: 1;
+}
+
+.unknown-length {
+  text-align: center;
+  padding: var(--space-3);
+  background: var(--gray-100);
+  border-radius: var(--radius-md);
+  color: var(--gray-600);
+  font-size: 13px;
+  font-style: italic;
+}
+
+/* Reset Button */
+.reset-button {
+  width: 100%;
+  padding: var(--space-3);
+  background: linear-gradient(135deg, var(--primary-500), var(--secondary-500));
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.reset-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.reset-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Loading & Error States */
+.loading, 
+.error {
+  text-align: center;
+  padding: var(--space-10);
+  font-size: 16px;
+  color: var(--gray-600);
+}
+
+.error {
+  color: var(--danger-600);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .playlists-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .playlists-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .status-header {
+    flex-direction: column;
+    gap: var(--space-3);
+    align-items: flex-start;
+  }
+
+  .refresh-button {
+    width: 100%;
+  }
+
+  .playlist-card {
+    padding: var(--space-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .subject-emoji {
+    font-size: 28px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .subject-info h3 {
+    font-size: 16px;
+  }
+
+  .progress-stats {
+    padding: var(--space-2);
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+}

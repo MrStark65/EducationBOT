@@ -8,6 +8,8 @@ function PlaylistManager({ chatId }) {
   const [showAddSubjectModal, setShowAddSubjectModal] = useState(false);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState('');
+  const [editingSubject, setEditingSubject] = useState(null); // Track which subject is being edited
+  const [editedUrls, setEditedUrls] = useState({}); // Track edited URLs
   const [scheduleConfig, setScheduleConfig] = useState({
     startDate: '',
     frequency: 'daily',
@@ -123,8 +125,10 @@ function PlaylistManager({ chatId }) {
     setSelectedSubject(subject);
     // Load existing schedule if any
     const existing = playlistSchedules[subject] || {};
+    // Default to today's date if no schedule exists
+    const today = new Date().toISOString().split('T')[0];
     setScheduleConfig({
-      startDate: existing.start_date || '',
+      startDate: existing.start_date || today,
       frequency: existing.frequency || 'daily',
       selectedDays: existing.selected_days || [1, 2, 3, 4, 5, 6, 0]
     });
@@ -203,7 +207,7 @@ function PlaylistManager({ chatId }) {
             <div>
               <h3 className="section-title">📖 Global Playlists (All Users)</h3>
               <p className="section-description">
-                These playlists apply to ALL users. Paste URL and press Enter to update.
+                These playlists apply to ALL users. Click Edit to modify URLs.
               </p>
             </div>
             <button className="btn-add-subject" onClick={() => setShowAddSubjectModal(true)}>
@@ -213,6 +217,9 @@ function PlaylistManager({ chatId }) {
           <div className="current-playlist-grid">
             {Object.entries(currentPlaylists).map(([subject, url]) => {
               const isDefault = defaultSubjects.includes(subject.toLowerCase());
+              const isEditing = editingSubject === subject;
+              const currentUrl = isEditing ? (editedUrls[subject] || url) : url;
+              
               return (
                 <div key={subject} className="current-playlist-card-simple">
                   <div className="playlist-icon">
@@ -224,25 +231,28 @@ function PlaylistManager({ chatId }) {
                   </div>
                   <div className="playlist-info-simple">
                     <h4>{subject.charAt(0).toUpperCase() + subject.slice(1)}</h4>
-                    <input
-                      type="url"
-                      value={url}
-                      onChange={(e) => {
-                        setCurrentPlaylists({...currentPlaylists, [subject]: e.target.value});
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          handleUpdatePlaylist(subject, e.target.value);
-                        }
-                      }}
-                      onBlur={(e) => {
-                        if (e.target.value !== url) {
-                          handleUpdatePlaylist(subject, e.target.value);
-                        }
-                      }}
-                      placeholder="Paste URL and press Enter"
-                      className="playlist-url-input"
-                    />
+                    {isEditing ? (
+                      <input
+                        type="url"
+                        value={currentUrl}
+                        onChange={(e) => {
+                          setEditedUrls({...editedUrls, [subject]: e.target.value});
+                        }}
+                        placeholder="Paste YouTube playlist URL"
+                        className="playlist-url-input"
+                        autoFocus
+                      />
+                    ) : (
+                      <div className="playlist-url-display">
+                        {url ? (
+                          <a href={url} target="_blank" rel="noopener noreferrer" className="playlist-url-link">
+                            {url.length > 50 ? url.substring(0, 50) + '...' : url}
+                          </a>
+                        ) : (
+                          <span className="no-url">No playlist set</span>
+                        )}
+                      </div>
+                    )}
                     {playlistSchedules[subject] && (
                       <div className="schedule-badge">
                         📅 {playlistSchedules[subject].frequency === 'daily' ? 'Daily' : 'Alternate'} from {playlistSchedules[subject].start_date}
@@ -255,21 +265,56 @@ function PlaylistManager({ chatId }) {
                     )}
                   </div>
                   <div className="playlist-actions-group">
-                    <button 
-                      className="btn-schedule-playlist"
-                      onClick={() => handleOpenSchedule(subject)}
-                      title="Set Schedule"
-                    >
-                      📅
-                    </button>
-                    {!isDefault && (
-                      <button 
-                        className="btn-delete-subject"
-                        onClick={() => handleDeleteSubject(subject)}
-                        title="Delete"
-                      >
-                        🗑️
-                      </button>
+                    {isEditing ? (
+                      <>
+                        <button 
+                          className="btn-save-playlist"
+                          onClick={() => {
+                            handleUpdatePlaylist(subject, editedUrls[subject] || url);
+                            setEditingSubject(null);
+                          }}
+                          title="Save"
+                        >
+                          ✅ Save
+                        </button>
+                        <button 
+                          className="btn-cancel-edit"
+                          onClick={() => {
+                            setEditingSubject(null);
+                            setEditedUrls({...editedUrls, [subject]: url});
+                          }}
+                          title="Cancel"
+                        >
+                          ❌
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button 
+                          className="btn-edit-playlist"
+                          onClick={() => {
+                            setEditingSubject(subject);
+                            setEditedUrls({...editedUrls, [subject]: url});
+                          }}
+                          title="Edit URL"
+                        >
+                          ✏️ Edit
+                        </button>
+                        <button 
+                          className="btn-schedule-playlist"
+                          onClick={() => handleOpenSchedule(subject)}
+                          title="Set Schedule"
+                        >
+                          📅
+                        </button>
+                        <button 
+                          className="btn-delete-subject"
+                          onClick={() => handleDeleteSubject(subject)}
+                          title="Delete Subject"
+                        >
+                          🗑️
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -380,12 +425,76 @@ function PlaylistManager({ chatId }) {
                 <small>How often to send videos on the selected days</small>
               </div>
 
+              {/* Visual Preview of Schedule */}
+              {scheduleConfig.startDate && scheduleConfig.selectedDays.length > 0 && (
+                <div className="schedule-preview-box">
+                  <p><strong>📅 Preview: Next 7 Days</strong></p>
+                  <div className="preview-days-grid">
+                    {(() => {
+                      const startDate = new Date(scheduleConfig.startDate);
+                      const today = new Date();
+                      today.setHours(0, 0, 0, 0);
+                      
+                      const previewDays = [];
+                      let sendCount = 0;
+                      
+                      for (let i = 0; i < 7; i++) {
+                        const date = new Date(today);
+                        date.setDate(today.getDate() + i);
+                        const weekday = date.getDay();
+                        const dayName = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][weekday];
+                        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                        
+                        let willSend = false;
+                        
+                        // Check if date is after start date
+                        if (date >= startDate) {
+                          // Check if weekday is selected
+                          if (scheduleConfig.selectedDays.includes(weekday)) {
+                            if (scheduleConfig.frequency === 'daily') {
+                              willSend = true;
+                            } else if (scheduleConfig.frequency === 'alternate') {
+                              // For alternate, send every 2nd occurrence
+                              sendCount++;
+                              if (sendCount % 2 === 1) {
+                                willSend = true;
+                              }
+                            }
+                          }
+                        }
+                        
+                        previewDays.push({
+                          dayName,
+                          dateStr,
+                          willSend,
+                          isToday: i === 0
+                        });
+                      }
+                      
+                      return previewDays.map((day, idx) => (
+                        <div key={idx} className={`preview-day ${day.willSend ? 'will-send' : 'no-send'} ${day.isToday ? 'is-today' : ''}`}>
+                          <div className="preview-day-name">{day.dayName}</div>
+                          <div className="preview-day-date">{day.dateStr}</div>
+                          <div className="preview-day-status">
+                            {day.willSend ? '✅ Sends' : '⏭️ Skip'}
+                          </div>
+                        </div>
+                      ));
+                    })()}
+                  </div>
+                  <small className="preview-note">
+                    💡 This shows when {selectedSubject} videos will be sent based on your settings
+                  </small>
+                </div>
+              )}
+
               <div className="schedule-info-box">
-                <p><strong>How it works:</strong></p>
+                <p><strong>ℹ️ How it works:</strong></p>
                 <ul>
-                  <li>Videos will be sent at the time set in "Daily Schedule"</li>
+                  <li>Videos sent at the time set in "Daily Schedule"</li>
                   <li>Starting from {scheduleConfig.startDate || 'selected date'}</li>
                   <li>Only on: {scheduleConfig.selectedDays.length === 7 ? 'All days' : 
+                    scheduleConfig.selectedDays.length === 0 ? 'No days selected' :
                     scheduleConfig.selectedDays.map(d => ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d]).join(', ')}</li>
                   <li>{scheduleConfig.frequency === 'daily' ? 'One video on each selected day' : 'One video every 2 selected days'}</li>
                   <li>If previous day marked DONE → next video</li>

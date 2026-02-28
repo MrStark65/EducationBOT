@@ -1,25 +1,330 @@
-2026-02-26 17:02:39 - api - INFO - main:login:159 - Login attempt for user: admin
-2026-02-26 17:02:39 - api - INFO - main:login:171 - Successful login for user: admin
-2026-02-26 17:04:48 - api - INFO - main:login:159 - Login attempt for user: admin
-2026-02-26 17:04:48 - api - WARNING - main:login:162 - Failed login attempt for user: admin
-2026-02-26 17:04:55 - api - INFO - main:login:159 - Login attempt for user: admin
-2026-02-26 17:04:55 - api - INFO - main:login:171 - Successful login for user: admin
-2026-02-26 17:18:56 - api - INFO - main:login:165 - Login attempt for user: admin
-2026-02-26 17:18:56 - api - INFO - main:login:177 - Successful login for user: admin
-2026-02-26 17:45:09 - api - INFO - main:login:169 - Login attempt for user: admin
-2026-02-26 17:45:09 - api - INFO - main:login:181 - Successful login for user: admin
-2026-02-26 17:48:07 - api - ERROR - main:get_system_analytics:1415 - Error fetching system analytics: no such column: chat_id
-2026-02-26 17:48:07 - api - ERROR - main:get_system_analytics:1415 - Error fetching system analytics: no such column: chat_id
-2026-02-26 17:48:07 - api - ERROR - main:get_all_users_analytics:1404 - Error fetching all users analytics: no such column: chat_id
-2026-02-26 17:48:07 - api - ERROR - main:get_all_users_analytics:1404 - Error fetching all users analytics: no such column: chat_id
-2026-02-26 17:48:17 - api - ERROR - main:get_user_analytics:1361 - Error fetching user analytics: no such column: chat_id
-2026-02-26 17:48:24 - api - ERROR - main:get_system_analytics:1415 - Error fetching system analytics: no such column: chat_id
-2026-02-26 17:48:24 - api - ERROR - main:get_system_analytics:1415 - Error fetching system analytics: no such column: chat_id
-2026-02-26 17:48:24 - api - ERROR - main:get_all_users_analytics:1404 - Error fetching all users analytics: no such column: chat_id
-2026-02-26 17:48:24 - api - ERROR - main:get_all_users_analytics:1404 - Error fetching all users analytics: no such column: chat_id
-2026-02-26 17:59:04 - api - INFO - main:login:169 - Login attempt for user: admin
-2026-02-26 17:59:05 - api - INFO - main:login:181 - Successful login for user: admin
-2026-02-26 18:07:46 - api - INFO - main:login:169 - Login attempt for user: admin
-2026-02-26 18:07:47 - api - INFO - main:login:181 - Successful login for user: admin
-2026-02-26 18:16:03 - api - INFO - main:login:169 - Login attempt for user: admin
-2026-02-26 18:16:03 - api - INFO - main:login:181 - Successful login for user: admin
+2026-02-28 14:41:06 - api - ERROR - main:get_playlists:849 - Get playlists error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 823, in get_playlists
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:41:06 - api - ERROR - main:get_playlists:849 - Get playlists error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 823, in get_playlists
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:41:07 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1134, in get_schedule_summary
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:41:07 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1134, in get_schedule_summary
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:41:10 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1134, in get_schedule_summary
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:41:10 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1134, in get_schedule_summary
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:42:43 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1134, in get_schedule_summary
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:42:43 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1134, in get_schedule_summary
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:43:04 - api - ERROR - main:get_playlists:849 - Get playlists error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 823, in get_playlists
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:43:04 - api - ERROR - main:get_playlists:849 - Get playlists error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 823, in get_playlists
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:43:12 - api - ERROR - main:get_playlists:849 - Get playlists error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 823, in get_playlists
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:43:12 - api - ERROR - main:get_playlists:849 - Get playlists error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 823, in get_playlists
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:43:14 - api - ERROR - main:get_playlists:849 - Get playlists error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 823, in get_playlists
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:43:14 - api - ERROR - main:get_playlists:849 - Get playlists error: no such table: global_config
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 823, in get_playlists
+    config = global_repo.get_global_config()
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 526, in get_global_config
+    cursor.execute("SELECT * FROM global_config WHERE id = 1")
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: global_config
+2026-02-28 14:59:35 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 14:59:35 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 14:59:38 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 14:59:38 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 14:59:40 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 14:59:40 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 14:59:47 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 14:59:47 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:00:21 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:00:21 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:00:31 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:00:31 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:00:47 - api - INFO - main:login:221 - Login attempt for user: admin
+2026-02-28 15:00:48 - api - INFO - main:login:233 - Successful login for user: admin
+2026-02-28 15:00:51 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:00:51 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:02:41 - api - INFO - main:clear_system_errors:307 - Cleared 41 old errors
+2026-02-28 15:04:02 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:04:02 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:04:49 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:04:49 - api - ERROR - main:get_schedule_summary:1211 - Schedule summary error: invalid literal for int() with base 10: '[0'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    schedule = global_repo.get_global_playlist_schedule(subject)
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/user_repository.py", line 597, in get_global_playlist_schedule
+    selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+                     ~~~^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: '[0'
+2026-02-28 15:11:27 - api - INFO - main:clear_system_errors:307 - Cleared 4 old errors
+2026-02-28 15:11:51 - api - INFO - main:broadcast_message:2000 - Broadcast sent to 0/2 users by admin
+2026-02-28 15:14:01 - api - ERROR - main:get_files:1535 - Error fetching files: no such table: files
+2026-02-28 15:14:01 - api - ERROR - main:get_files:1535 - Error fetching files: no such table: files
+2026-02-28 15:14:12 - api - ERROR - main:upload_file:1562 - Error uploading file: no such table: files
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1550, in upload_file
+    result = file_manager.save_file(
+        file_data=BytesIO(file_data),
+        original_filename=file.filename,
+        uploaded_by=payload.get("username", "admin")
+    )
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/file_manager.py", line 235, in save_file
+    cursor.execute("""
+    ~~~~~~~~~~~~~~^^^^
+        INSERT INTO files (file_id, original_name, file_type, mime_type, file_size, storage_path, uploaded_by)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    """, (file_id, original_filename, extension, mime_type, file_size, relative_path, uploaded_by))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: no such table: files
+2026-02-28 15:14:17 - api - ERROR - main:get_files:1535 - Error fetching files: no such table: files
+2026-02-28 15:14:17 - api - ERROR - main:get_files:1535 - Error fetching files: no such table: files
+2026-02-28 15:15:29 - api - INFO - main:upload_file:1556 - File uploaded: pathfinder-cds-combined-defence-expertsarihant-90f15b25.pdf by admin
+2026-02-28 15:39:00 - api - INFO - main:delete_file:1573 - Attempting to delete file: f5debb51-a835-42a4-8340-67af511ae1fd
+2026-02-28 15:39:00 - api - INFO - main:delete_file:1580 - File deleted: f5debb51-a835-42a4-8340-67af511ae1fd by admin
+2026-02-28 16:43:54 - api - INFO - main:clear_system_errors:307 - Cleared 5 old errors
+2026-02-28 16:58:43 - api - ERROR - main:get_schedule_summary:1210 - Schedule summary error: string indices must be integers, not 'str'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    subject = schedule['subject_name']
+              ~~~~~~~~^^^^^^^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+2026-02-28 16:58:43 - api - ERROR - main:get_schedule_summary:1210 - Schedule summary error: string indices must be integers, not 'str'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1142, in get_schedule_summary
+    subject = schedule['subject_name']
+              ~~~~~~~~^^^^^^^^^^^^^^^^
+TypeError: string indices must be integers, not 'str'
+2026-02-28 17:07:28 - api - INFO - main:delete_custom_playlist:973 - Deleted custom subject: gk mcq
+2026-02-28 17:08:03 - api - INFO - main:clear_system_errors:307 - Cleared 2 old errors
+2026-02-28 17:16:07 - api - INFO - main:login:221 - Login attempt for user: admin
+2026-02-28 17:16:08 - api - INFO - main:login:233 - Successful login for user: admin
+2026-02-28 17:30:55 - api - INFO - main:login:221 - Login attempt for user: admin
+2026-02-28 17:30:55 - api - INFO - main:login:233 - Successful login for user: admin
+2026-02-28 17:34:33 - api - ERROR - main:get_playlists_status:1914 - Error getting playlist status: 'GlobalRepository' object has no attribute 'get_user_config'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1846, in get_playlists_status
+    user_config = global_repo.get_user_config(user_id=1)  # Show first user's progress
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'GlobalRepository' object has no attribute 'get_user_config'
+2026-02-28 17:34:33 - api - ERROR - main:get_playlists_status:1914 - Error getting playlist status: 'GlobalRepository' object has no attribute 'get_user_config'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1846, in get_playlists_status
+    user_config = global_repo.get_user_config(user_id=1)  # Show first user's progress
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'GlobalRepository' object has no attribute 'get_user_config'
+2026-02-28 17:34:44 - api - ERROR - main:get_playlists_status:1914 - Error getting playlist status: 'GlobalRepository' object has no attribute 'get_user_config'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1846, in get_playlists_status
+    user_config = global_repo.get_user_config(user_id=1)  # Show first user's progress
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'GlobalRepository' object has no attribute 'get_user_config'
+2026-02-28 17:34:44 - api - ERROR - main:get_playlists_status:1914 - Error getting playlist status: 'GlobalRepository' object has no attribute 'get_user_config'
+Traceback (most recent call last):
+  File "/Users/apple/Documents/Projects/Priya-cds-bot/backend/main.py", line 1846, in get_playlists_status
+    user_config = global_repo.get_user_config(user_id=1)  # Show first user's progress
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'GlobalRepository' object has no attribute 'get_user_config'
+2026-02-28 17:46:38 - api - INFO - main:clear_system_errors:307 - Cleared 4 old errors

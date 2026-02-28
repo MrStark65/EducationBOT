@@ -5,7 +5,7 @@ import FileLibrary from './FileLibrary'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
-function ScheduleConfig({ onUpdate, chatId }) {
+function ScheduleConfig({ onUpdate, chatId, authToken }) {
   const [enabled, setEnabled] = useState(false)
   const [time, setTime] = useState('06:00')
   const [loading, setLoading] = useState(false)
@@ -206,7 +206,7 @@ function ScheduleConfig({ onUpdate, chatId }) {
 
       {/* Documents Section */}
       {activeSection === 'documents' && (
-        <FileLibrary chatId={null} />
+        <FileLibrary chatId={null} authToken={authToken} />
       )}
     </div>
   )

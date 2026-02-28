@@ -591,12 +591,18 @@ class GlobalRepository:
         conn.close()
         
         if row:
-            import json
+            # Parse selected_days from comma-separated string to list of integers
+            selected_days_str = row['selected_days']
+            if selected_days_str:
+                selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+            else:
+                selected_days = []
+            
             return {
                 'subject_name': row['subject_name'],
                 'start_date': row['start_date'],
                 'frequency': row['frequency'],
-                'selected_days': json.loads(row['selected_days']),
+                'selected_days': selected_days,
                 'last_sent_date': row['last_sent_date']
             }
         return None
@@ -612,13 +618,19 @@ class GlobalRepository:
         rows = cursor.fetchall()
         conn.close()
         
-        import json
         schedules = {}
         for row in rows:
+            # Parse selected_days from comma-separated string to list of integers
+            selected_days_str = row['selected_days']
+            if selected_days_str:
+                selected_days = [int(d.strip()) for d in selected_days_str.split(',')]
+            else:
+                selected_days = []
+            
             schedules[row['subject_name']] = {
                 'start_date': row['start_date'],
                 'frequency': row['frequency'],
-                'selected_days': json.loads(row['selected_days']),
+                'selected_days': selected_days,
                 'last_sent_date': row['last_sent_date']
             }
         return schedules
@@ -630,8 +642,8 @@ class GlobalRepository:
         cursor = conn.cursor()
         
         try:
-            import json
-            selected_days_json = json.dumps(selected_days)
+            # Convert list to comma-separated string
+            selected_days_str = ','.join(str(d) for d in sorted(selected_days))
             
             cursor.execute("""
                 INSERT INTO global_playlist_schedules (subject_name, start_date, frequency, selected_days)
@@ -642,8 +654,8 @@ class GlobalRepository:
                     frequency = ?,
                     selected_days = ?,
                     updated_at = CURRENT_TIMESTAMP
-            """, (subject_name, start_date, frequency, selected_days_json,
-                  start_date, frequency, selected_days_json))
+            """, (subject_name, start_date, frequency, selected_days_str,
+                  start_date, frequency, selected_days_str))
             conn.commit()
             return True
         except Exception as e:

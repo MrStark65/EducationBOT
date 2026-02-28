@@ -1,0 +1,479 @@
+/* ============================================================
+   DASTON UI — layout.css
+   Officer Priya CDS System
+   ============================================================ */
+
+/* Dashboard Layout */
+.dastone-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: var(--gray-50);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+/* ── Sidebar ── */
+.dastone-sidebar {
+  width: var(--sidebar-width);
+  background: #1c1917;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: width var(--transition-base);
+  z-index: 1000;
+  border-right: 1px solid #2c2825;
+}
+
+.dastone-sidebar.closed {
+  width: var(--sidebar-collapsed);
+}
+
+.sidebar-header {
+  padding: var(--space-5);
+  border-bottom: 1px solid #2c2825;
+  min-height: var(--topbar-height);
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.logo-icon {
+  font-size: 32px;
+  min-width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-text h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.logo-text p {
+  font-size: 10px;
+  color: #6b6560;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+.dastone-sidebar.closed .logo-text { display: none; }
+
+/* ── Nav ── */
+.sidebar-nav {
+  flex: 1;
+  padding: var(--space-3) 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.sidebar-nav::-webkit-scrollbar { display: none; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  color: #6b6560;
+  background: none;
+  border: none;
+  border-left: 3px solid transparent;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  position: relative;
+  font-size: 13.5px;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,.05);
+  color: #c8c1b7;
+}
+
+.nav-item.active {
+  background: rgba(255,255,255,.08);
+  color: #ffffff;
+  border-left-color: #ffffff;
+}
+
+.nav-icon {
+  font-size: 20px;
+  min-width: 20px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-label { flex: 1; white-space: nowrap; }
+.dastone-sidebar.closed .nav-label { display: none; }
+
+.nav-badge {
+  background: #b91c1c;
+  color: white;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+
+.dastone-sidebar.closed .nav-badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  padding: 2px 5px;
+  font-size: 9px;
+}
+
+.sidebar-footer {
+  border-top: 1px solid #2c2825;
+  padding: var(--space-2) 0;
+}
+
+/* ── Main ── */
+.dastone-main {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  transition: margin-left var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: calc(100vw - var(--sidebar-width));
+  overflow: hidden;
+}
+
+.dastone-sidebar.closed ~ .dastone-main {
+  margin-left: var(--sidebar-collapsed);
+  width: calc(100vw - var(--sidebar-collapsed));
+}
+
+/* ── Topbar ── */
+.dastone-topbar {
+  height: var(--topbar-height);
+  background: #ffffff;
+  border-bottom: 1.5px solid #e8e3db;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  gap: var(--space-4);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(28,25,23,.06);
+  flex-shrink: 0;
+}
+
+.sidebar-toggle {
+  background: #f3f0eb;
+  border: 1.5px solid #e8e3db;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  color: #6b6560;
+  transition: all 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-toggle:hover { background: #ede9e1; color: #1c1917; }
+
+.topbar-title h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: #1c1917;
+  line-height: 1.2;
+}
+
+.breadcrumb { font-size: 12px; color: #9d978f; margin: 2px 0 0; }
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+
+.global-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #1c1917;
+  color: #ffffff;
+  padding: 7px 14px;
+  border-radius: 99px;
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.btn-icon {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 8px;
+  background: #f3f0eb;
+  border: 1.5px solid #e8e3db;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  transition: all 0.18s ease;
+  color: #6b6560;
+}
+
+.btn-icon:hover { background: #ede9e1; color: #1c1917; }
+
+/* ══════════════════════════════════════════
+   CONTENT AREA — THE KEY FIX
+   ══════════════════════════════════════════ */
+.dastone-content {
+  flex: 1;
+  padding: var(--space-6);
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: calc(100vh - var(--topbar-height));
+  max-height: calc(100vh - var(--topbar-height));
+  width: 100%;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+/*
+  !! ROOT CAUSE OF THE NARROW COLUMN BUG !!
+
+  Before (your original layout.css):
+    .content-view {
+      background: white;          ← white card background
+      border-radius: var(--radius-lg);  ← rounded card
+      padding: var(--space-6);    ← internal card padding
+      box-shadow: var(--shadow-sm); ← card shadow
+      border: 1px solid var(--gray-200); ← card border
+      height: 100%;               ← fills the padded parent
+      overflow-y: auto;           ← its own scroll
+    }
+
+  This made .content-view a WHITE CARD inside .dastone-content.
+  Since .dastone-content had padding: var(--space-6) on all sides,
+  the card was already inset. Then .schedule-config / .schedule-card
+  inside it were flex children with no explicit width, so they
+  auto-sized to their content — creating that narrow ~580px column.
+
+  Fix: Remove all card styling. Make it a transparent full-width
+  flex column that simply passes dimensions down to its children.
+*/
+.content-view {
+  /* Layout — full width, flex column */
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  max-height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  /* Remove the card — these are now GONE */
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+
+  /* Keep scroll on the outer container, not here */
+  overflow-y: visible;
+}
+
+/* ── View Header ── */
+.view-header {
+  flex-shrink: 0;
+  padding-bottom: 20px;
+  border-bottom: 1.5px solid #e8e3db;
+  margin-bottom: 0;
+}
+
+.view-header h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #1c1917;
+  margin: 0 0 5px;
+  line-height: 1.2;
+}
+
+.view-header p {
+  font-size: 13.5px;
+  color: #9d978f;
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* ── Users Table ── */
+.users-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1.5px solid #e8e3db;
+  border-radius: 16px;
+  background: #ffffff;
+  flex: 1;
+}
+
+.users-table table { width: 100%; border-collapse: collapse; }
+
+.users-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9d978f;
+  text-transform: uppercase;
+  background: #faf9f6;
+  border-bottom: 1.5px solid #e8e3db;
+  letter-spacing: 0.09em;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.users-table th:first-child { padding-left: 22px; }
+.users-table th:last-child  { padding-right: 22px; }
+
+.users-table td {
+  padding: 13px 16px;
+  border-bottom: 1px solid #e8e3db;
+  font-size: 13.5px;
+  color: #3c3732;
+  font-weight: 500;
+  vertical-align: middle;
+}
+
+.users-table td:first-child { padding-left: 22px; }
+.users-table td:last-child  { padding-right: 22px; }
+
+.users-table tr:last-child td { border-bottom: none; }
+.users-table tr:hover td { background: #faf9f6; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .dastone-sidebar { 
+    transform: translateX(-100%);
+    width: 280px; /* Fixed width for mobile */
+  }
+  .dastone-sidebar.open { 
+    transform: translateX(0);
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
+  }
+  .dastone-main { 
+    margin-left: 0 !important; 
+    width: 100vw !important; 
+  }
+}
+
+/* Mobile Overlay */
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    animation: fadeIn 0.3s ease;
+  }
+  
+  .dastone-sidebar {
+    z-index: 1000;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+}
+
+@media (max-width: 768px) {
+  .dastone-topbar { 
+    padding: 0 var(--space-4); 
+    height: 56px;
+  }
+  .dastone-content { 
+    padding: var(--space-4); 
+    height: calc(100vh - 56px);
+    max-height: calc(100vh - 56px);
+  }
+  .breadcrumb { display: none; }
+  .content-view { gap: 14px; }
+  .topbar-title h2 {
+    font-size: 16px;
+  }
+  .global-badge {
+    font-size: 11px;
+    padding: 5px 10px;
+  }
+  .btn-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dastone-content { 
+    padding: 12px; 
+    height: calc(100vh - 56px);
+    max-height: calc(100vh - 56px);
+  }
+  .topbar-title h2 { font-size: 15px; }
+  .content-view { gap: 12px; }
+  .topbar-actions {
+    gap: 8px;
+  }
+  .global-badge .badge-text {
+    display: none;
+  }
+  .global-badge {
+    padding: 6px;
+    width: 32px;
+    height: 32px;
+    justify-content: center;
+  }
+}

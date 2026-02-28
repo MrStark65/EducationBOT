@@ -1,10 +1,12 @@
-from fastapi import FastAPI, HTTPException, Body, Query, Depends, Header
+from fastapi import FastAPI, HTTPException, Body, Query, Depends, Header, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.responses import FileResponse
 from contextlib import asynccontextmanager
 from pydantic import BaseModel
 import os
 import asyncio
+from io import BytesIO
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from typing import Optional
@@ -57,6 +59,7 @@ auth_manager = None
 backup_manager = None
 file_manager = None
 user_manager = None
+bot_thread = None  # Thread for running the bot
 
 
 # Auth dependency
@@ -64,10 +67,11 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
     """Verify JWT token"""
     token = credentials.credentials
     api_logger.debug(f"Verifying token: {token[:20]}...")
+    api_logger.debug(f"Using SECRET_KEY: {os.getenv('JWT_SECRET_KEY', 'default')[:10]}...")
     payload = auth_manager.verify_token(token)
     
     if not payload:
-        api_logger.warning("Token verification failed - invalid or expired token")
+        api_logger.warning(f"Token verification failed - invalid or expired token. Token: {token[:30]}...")
         raise HTTPException(status_code=401, detail="Invalid or expired token")
     
     # Add username to payload for convenience
@@ -79,7 +83,7 @@ async def verify_token(credentials: HTTPAuthorizationCredentials = Depends(secur
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Initialize on startup"""
-    global db, user_repo, global_repo, bot, video_selector, streak_calc, completion_calc, auth_manager, backup_manager, file_manager, user_manager
+    global db, user_repo, global_repo, bot, video_selector, streak_calc, completion_calc, auth_manager, backup_manager, file_manager, user_manager, bot_thread
     
     app_logger.info("🚀 Starting Officer Priya CDS System")
     
@@ -114,6 +118,20 @@ async def lifespan(app: FastAPI):
     user_manager = get_user_manager(db_path="officer_priya_multi.db")
     app_logger.info("✅ User manager initialized")
     
+    # Start Telegram bot in background thread
+    import threading
+    def run_bot():
+        try:
+            app_logger.info("🤖 Starting Telegram Bot in background...")
+            from bot_polling_simple import main as bot_main
+            bot_main()
+        except Exception as e:
+            app_logger.error(f"❌ Bot error: {e}", exc_info=True)
+    
+    bot_thread = threading.Thread(target=run_bot, daemon=True)
+    bot_thread.start()
+    app_logger.info("✅ Telegram Bot started in background thread")
+    
     # Create initial backup
     try:
         backup_path = backup_manager.auto_backup(compress=True, keep_count=10)
@@ -122,16 +140,45 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         app_logger.error(f"❌ Initial backup failed: {e}", exc_info=True)
     
-    # Note: Advanced scheduler service disabled - using simple multi-user scheduler instead
-    # initialize_scheduler_service(bot)
-    
     app_logger.info("✅ Multi-user system initialized")
+    
+    # Start schedulers in background
+    scheduler_tasks = []
+    
+    # Start file scheduler
+    try:
+        from file_scheduler import FileScheduler
+        file_scheduler = FileScheduler()
+        file_scheduler_task = asyncio.create_task(file_scheduler.run())
+        scheduler_tasks.append(file_scheduler_task)
+        app_logger.info("✅ File scheduler started")
+    except Exception as e:
+        app_logger.error(f"❌ File scheduler failed to start: {e}", exc_info=True)
+    
+    # Start daily content scheduler
+    try:
+        from multi_user_scheduler import MultiUserScheduler
+        daily_scheduler = MultiUserScheduler()
+        daily_scheduler_task = asyncio.create_task(daily_scheduler.run_scheduler())
+        scheduler_tasks.append(daily_scheduler_task)
+        app_logger.info("✅ Daily content scheduler started")
+    except Exception as e:
+        app_logger.error(f"❌ Daily content scheduler failed to start: {e}", exc_info=True)
     
     yield
     
     # Cleanup on shutdown
     app_logger.info("🛑 Shutting down Officer Priya CDS System")
-    # shutdown_scheduler_service()
+    
+    # Cancel scheduler tasks
+    for task in scheduler_tasks:
+        task.cancel()
+        try:
+            await task
+        except asyncio.CancelledError:
+            pass
+    
+    app_logger.info("✅ Schedulers stopped")
 
 
 app = FastAPI(title="Officer Priya CDS System", lifespan=lifespan)
@@ -543,9 +590,73 @@ async def send_daily(chat_id: str = Query(..., description="User's Telegram chat
 
 @app.post("/api/telegram/webhook")
 async def telegram_webhook(update: dict):
-    """Handle Telegram button click callbacks"""
+    """Handle Telegram updates (messages and callbacks)"""
     try:
-        # Extract callback query
+        # Handle regular messages (like /start command)
+        message = update.get("message")
+        if message:
+            chat_id = message.get("chat", {}).get("id")
+            text = message.get("text", "")
+            user_info = message.get("from", {})
+            
+            # Handle /start command
+            if text.startswith("/start"):
+                # Register or update user
+                first_name = user_info.get("first_name", "User")
+                last_name = user_info.get("last_name", "")
+                username = user_info.get("username", "")
+                
+                # Check if user exists
+                existing_user = user_repo.get_user_by_chat_id(str(chat_id))
+                
+                if not existing_user:
+                    # Create new user
+                    from user_repository import User
+                    new_user = User(
+                        chat_id=str(chat_id),
+                        first_name=first_name,
+                        last_name=last_name,
+                        username=username,
+                        is_active=True
+                    )
+                    user_repo.insert_user(new_user)
+                    
+                    welcome_msg = f"👋 Welcome {first_name}!\n\n"
+                    welcome_msg += "🎯 Officer Priya CDS Preparation Bot\n\n"
+                    welcome_msg += "You'll receive daily study materials including:\n"
+                    welcome_msg += "📚 English videos\n"
+                    welcome_msg += "📖 GK content (History, Polity, Geography, Economics)\n"
+                    welcome_msg += "📄 Study documents and PDFs\n\n"
+                    welcome_msg += "✅ Mark your progress with Done/Not Done buttons\n"
+                    welcome_msg += "🔥 Build your study streak!\n\n"
+                    welcome_msg += "Ready to start your CDS preparation journey! 💪"
+                else:
+                    # User already exists
+                    welcome_msg = f"👋 Welcome back {first_name}!\n\n"
+                    welcome_msg += "You're already registered. You'll continue receiving daily study materials.\n\n"
+                    welcome_msg += "Keep up the great work! 🔥"
+                
+                # Send welcome message
+                await bot.send_confirmation(str(chat_id), welcome_msg)
+                
+                return {"ok": True, "message": "Welcome message sent"}
+            
+            # Handle other commands or messages
+            elif text.startswith("/help"):
+                help_msg = "🤖 Officer Priya CDS Bot - Help\n\n"
+                help_msg += "Available commands:\n"
+                help_msg += "/start - Register and start receiving materials\n"
+                help_msg += "/help - Show this help message\n\n"
+                help_msg += "You'll receive daily study materials automatically.\n"
+                help_msg += "Use the Done/Not Done buttons to track your progress!"
+                
+                await bot.send_confirmation(str(chat_id), help_msg)
+                return {"ok": True, "message": "Help message sent"}
+            
+            # For other messages, just acknowledge
+            return {"ok": True}
+        
+        # Handle callback queries (button clicks)
         callback_query = update.get("callback_query")
         if not callback_query:
             return {"ok": True}
@@ -721,10 +832,21 @@ async def get_playlists(chat_id: str = Query(None, description="User's Telegram 
             "economics": config.economics_playlist
         }
         
+        # Add custom subjects
+        conn = db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT subject_name, playlist_url FROM custom_subjects ORDER BY subject_name")
+        custom_subjects = cursor.fetchall()
+        conn.close()
+        
+        for subject_name, playlist_url in custom_subjects:
+            playlists[subject_name.lower()] = playlist_url
+        
         return playlists
     except HTTPException:
         raise
     except Exception as e:
+        api_logger.error(f"Get playlists error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -737,63 +859,124 @@ async def update_playlist(data: PlaylistUpdate, chat_id: str = Query(None, descr
         if not re.search(r'youtube\.com.*list=', data.url):
             raise HTTPException(status_code=400, detail="Invalid YouTube playlist URL")
         
-        config = global_repo.get_global_config()
-        if not config:
-            raise HTTPException(status_code=500, detail="Global configuration not found")
-        
         subject_lower = data.subject.lower()
         
-        # Update global playlist and reset index
-        if subject_lower == "english":
-            config.english_playlist = data.url
-            config.english_index = 0
-        elif subject_lower == "history":
-            config.history_playlist = data.url
-            config.history_index = 0
-        elif subject_lower == "polity":
-            config.polity_playlist = data.url
-            config.polity_index = 0
-        elif subject_lower == "geography":
-            config.geography_playlist = data.url
-            config.geography_index = 0
-        elif subject_lower == "economics":
-            config.economics_playlist = data.url
-            config.economics_index = 0
-        else:
-            raise HTTPException(status_code=400, detail="Invalid subject")
+        # Check if it's a default subject
+        default_subjects = ["english", "history", "polity", "geography", "economics"]
         
-        global_repo.update_global_config(config)
+        if subject_lower in default_subjects:
+            # Update default subject in global_config
+            config = global_repo.get_global_config()
+            if not config:
+                raise HTTPException(status_code=500, detail="Global configuration not found")
+            
+            if subject_lower == "english":
+                config.english_playlist = data.url
+                config.english_index = 0
+            elif subject_lower == "history":
+                config.history_playlist = data.url
+                config.history_index = 0
+            elif subject_lower == "polity":
+                config.polity_playlist = data.url
+                config.polity_index = 0
+            elif subject_lower == "geography":
+                config.geography_playlist = data.url
+                config.geography_index = 0
+            elif subject_lower == "economics":
+                config.economics_playlist = data.url
+                config.economics_index = 0
+            
+            global_repo.update_global_config(config)
+        else:
+            # Handle custom subject
+            conn = db.get_connection()
+            cursor = conn.cursor()
+            
+            # Check if custom subject exists
+            cursor.execute("SELECT id FROM custom_subjects WHERE LOWER(subject_name) = ?", (subject_lower,))
+            existing = cursor.fetchone()
+            
+            if existing:
+                # Update existing custom subject
+                cursor.execute("""
+                    UPDATE custom_subjects 
+                    SET playlist_url = ?, current_index = 0, updated_at = CURRENT_TIMESTAMP
+                    WHERE LOWER(subject_name) = ?
+                """, (data.url, subject_lower))
+            else:
+                # Insert new custom subject
+                cursor.execute("""
+                    INSERT INTO custom_subjects (subject_name, playlist_url, current_index)
+                    VALUES (?, ?, 0)
+                """, (data.subject, data.url))
+            
+            conn.commit()
+            conn.close()
         
         return {"success": True}
     
     except HTTPException:
         raise
     except Exception as e:
+        api_logger.error(f"Update playlist error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.delete("/api/config/playlists/{subject}")
-async def delete_custom_playlist(subject: str, chat_id: str = Query(..., description="User's Telegram chat ID")):
-    """Delete a custom playlist (cannot delete default subjects)"""
+async def delete_custom_playlist(subject: str, chat_id: str = Query(None, description="User's Telegram chat ID (optional for global mode)")):
+    """Delete a playlist - clears URL for default subjects, removes custom subjects"""
     try:
-        user = user_repo.get_user_by_chat_id(chat_id)
-        if not user:
-            raise HTTPException(status_code=404, detail="User not found")
-        
-        # Prevent deletion of default subjects
         default_subjects = ["english", "history", "polity", "geography", "economics"]
-        if subject.lower() in default_subjects:
-            raise HTTPException(status_code=400, detail="Cannot delete default subjects")
+        subject_lower = subject.lower()
         
-        success = user_repo.delete_custom_playlist(user.id, subject)
-        if not success:
-            raise HTTPException(status_code=404, detail="Custom playlist not found")
-        
-        return {"success": True}
+        if subject_lower in default_subjects:
+            # For default subjects, just clear the URL (don't delete from config)
+            config = global_repo.get_global_config()
+            if not config:
+                raise HTTPException(status_code=500, detail="Global configuration not found")
+            
+            if subject_lower == "english":
+                config.english_playlist = ""
+            elif subject_lower == "history":
+                config.history_playlist = ""
+            elif subject_lower == "polity":
+                config.polity_playlist = ""
+            elif subject_lower == "geography":
+                config.geography_playlist = ""
+            elif subject_lower == "economics":
+                config.economics_playlist = ""
+            
+            global_repo.update_global_config(config)
+            
+            # Also delete its schedule if exists
+            global_repo.delete_global_playlist_schedule(subject_lower)
+            
+            api_logger.info(f"Cleared playlist URL for default subject: {subject}")
+            return {"success": True, "message": f"Playlist URL cleared for {subject}"}
+        else:
+            # Delete custom subject completely
+            conn = db.get_connection()
+            cursor = conn.cursor()
+            
+            cursor.execute("DELETE FROM custom_subjects WHERE LOWER(subject_name) = ?", (subject_lower,))
+            deleted = cursor.rowcount
+            
+            # Also delete its schedule if exists
+            cursor.execute("DELETE FROM global_playlist_schedules WHERE LOWER(subject_name) = ?", (subject_lower,))
+            
+            conn.commit()
+            conn.close()
+            
+            if deleted == 0:
+                raise HTTPException(status_code=404, detail="Custom subject not found")
+            
+            api_logger.info(f"Deleted custom subject: {subject}")
+            return {"success": True, "message": f"Custom subject {subject} deleted"}
     
     except HTTPException:
         raise
     except Exception as e:
+        api_logger.error(f"Delete playlist error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -942,6 +1125,89 @@ async def update_schedule(schedule: ScheduleConfig, chat_id: str = Query(None, d
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@app.get("/api/config/schedule-summary")
+async def get_schedule_summary(payload: dict = Depends(verify_token)):
+    """Get weekly schedule summary showing what sends on each day"""
+    try:
+        from datetime import datetime, timedelta
+        
+        config = global_repo.get_global_config()
+        if not config:
+            raise HTTPException(status_code=500, detail="Global configuration not found")
+        
+        # Get all playlist schedules from database (not hardcoded)
+        playlist_schedules = global_repo.get_all_global_playlist_schedules()
+        
+        # Build weekly schedule (next 7 days)
+        weekly_schedule = []
+        today = datetime.now().date()
+        
+        for day_offset in range(7):
+            date = today + timedelta(days=day_offset)
+            python_weekday = date.weekday()  # 0=Monday, 6=Sunday
+            # Convert Python weekday to calendar weekday (0=Sunday, 6=Saturday)
+            weekday = (python_weekday + 1) % 7
+            day_name = date.strftime("%A")
+            date_str = date.strftime("%Y-%m-%d")
+            
+            subjects_for_day = []
+            
+            # Check each subject
+            for subject, schedule in playlist_schedules.items():
+                start_date = datetime.strptime(schedule['start_date'], "%Y-%m-%d").date()
+                
+                # Check if date is after start date
+                if date < start_date:
+                    continue
+                
+                # Check if weekday is in selected days
+                if weekday not in schedule['selected_days']:
+                    continue
+                
+                # Check frequency
+                if schedule['frequency'] == 'daily':
+                    subjects_for_day.append(subject)
+                elif schedule['frequency'] == 'alternate':
+                    last_sent = schedule.get('last_sent_date')
+                    if not last_sent:
+                        subjects_for_day.append(subject)
+                    else:
+                        last_sent_date = datetime.strptime(last_sent, "%Y-%m-%d").date()
+                        days_passed = 0
+                        check_date = last_sent_date + timedelta(days=1)
+                        while check_date <= date:
+                            check_python_weekday = check_date.weekday()
+                            check_weekday = (check_python_weekday + 1) % 7
+                            if check_weekday in schedule['selected_days']:
+                                days_passed += 1
+                            check_date += timedelta(days=1)
+                        
+                        if days_passed >= 2:
+                            subjects_for_day.append(subject)
+            
+            weekly_schedule.append({
+                "date": date_str,
+                "day_name": day_name,
+                "weekday": weekday,
+                "is_today": day_offset == 0,
+                "subjects": subjects_for_day
+            })
+        
+        return {
+            "schedule_enabled": config.schedule_enabled,
+            "schedule_time": config.schedule_time,
+            "current_day": config.current_day,
+            "weekly_schedule": weekly_schedule
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        api_logger.error(f"Schedule summary error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @app.get("/api/admin/users")
 async def get_all_users():
     """Get all registered users (admin endpoint)"""
@@ -986,8 +1252,6 @@ async def send_file_now(file_id: str = Body(..., embed=True), chat_id: str = Que
         print(f"{'='*60}")
         
         # Get file metadata
-        from file_manager import FileManager
-        file_manager = FileManager()
         metadata = file_manager.get_file_metadata(file_id)
         
         if not metadata:
@@ -1112,6 +1376,74 @@ async def send_file_now(file_id: str = Body(..., embed=True), chat_id: str = Que
     except HTTPException:
         raise
     except Exception as e:
+        api_logger.error(f"Error in send_file_now: {str(e)}", exc_info=True)
+        print(f"❌ EXCEPTION in send_file_now: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/admin/schedule-file")
+async def schedule_file(
+    file_id: str = Body(...),
+    scheduled_time: str = Body(...),
+    payload: dict = Depends(verify_token)
+):
+    """Schedule a file to be sent at a specific date and time"""
+    try:
+        from datetime import datetime
+        
+        # Validate file exists
+        metadata = file_manager.get_file_metadata(file_id)
+        if not metadata:
+            raise HTTPException(status_code=404, detail="File not found")
+        
+        # Parse and validate scheduled time
+        try:
+            scheduled_dt = datetime.strptime(scheduled_time, "%Y-%m-%d %H:%M")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid date/time format. Use YYYY-MM-DD HH:MM")
+        
+        # Check if time is in the future
+        if scheduled_dt <= datetime.now():
+            raise HTTPException(status_code=400, detail="Scheduled time must be in the future")
+        
+        # Store schedule in database
+        conn = db.get_connection()
+        cursor = conn.cursor()
+        
+        # Create scheduled_files table if it doesn't exist
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS scheduled_files (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                file_id TEXT NOT NULL,
+                scheduled_time TIMESTAMP NOT NULL,
+                status TEXT DEFAULT 'pending',
+                created_by TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        cursor.execute("""
+            INSERT INTO scheduled_files (file_id, scheduled_time, created_by)
+            VALUES (?, ?, ?)
+        """, (file_id, scheduled_time, payload.get("username", "admin")))
+        
+        conn.commit()
+        conn.close()
+        
+        api_logger.info(f"File {file_id} scheduled for {scheduled_time} by {payload.get('username')}")
+        
+        return {
+            "success": True,
+            "message": f"File scheduled for {scheduled_dt.strftime('%B %d, %Y at %I:%M %p')}",
+            "scheduled_time": scheduled_time
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        api_logger.error(f"Error scheduling file: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -1178,10 +1510,6 @@ async def delete_playlist_schedule(subject: str, chat_id: str = Query(None, desc
 
 # ==================== FILE MANAGEMENT ENDPOINTS ====================
 
-from fastapi import UploadFile, File
-from fastapi.responses import FileResponse
-from io import BytesIO
-
 
 @app.get("/api/files")
 async def get_files(
@@ -1192,12 +1520,12 @@ async def get_files(
 ):
     """Get list of uploaded files"""
     try:
-        files = file_manager.list_files(
+        files, total = file_manager.list_files(
             file_type=type if type != 'all' else None,
             search=search,
             limit=limit
         )
-        return {"files": files}
+        return {"files": files, "total": total}
     except Exception as e:
         api_logger.error(f"Error fetching files: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -1220,15 +1548,13 @@ async def upload_file(
             uploaded_by=payload.get("username", "admin")
         )
         
-        if not result.get("success"):
-            raise HTTPException(status_code=400, detail=result.get("error", "Upload failed"))
-        
         api_logger.info(f"File uploaded: {file.filename} by {payload.get('username')}")
-        return result
-    except HTTPException:
-        raise
+        return {"success": True, **result}
+    except ValueError as e:
+        api_logger.warning(f"File validation failed: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        api_logger.error(f"Error uploading file: {str(e)}")
+        api_logger.error(f"Error uploading file: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -1239,9 +1565,11 @@ async def delete_file(
 ):
     """Delete a file"""
     try:
+        api_logger.info(f"Attempting to delete file: {file_id}")
         success, error, warnings = file_manager.delete_file(file_id)
         
         if not success:
+            api_logger.warning(f"Delete failed: {error}")
             raise HTTPException(status_code=404, detail=error or "File not found")
         
         api_logger.info(f"File deleted: {file_id} by {payload.get('username')}")
@@ -1249,7 +1577,7 @@ async def delete_file(
     except HTTPException:
         raise
     except Exception as e:
-        api_logger.error(f"Error deleting file: {str(e)}")
+        api_logger.error(f"Error deleting file: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -1356,6 +1684,89 @@ async def get_user_analytics(
             "completion_rate": analytics.completion_rate,
             "current_streak": analytics.current_streak,
             "longest_streak": analytics.longest_streak,
+            "last_activity": analytics.last_activity.isoformat() if analytics.last_activity else None
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        api_logger.error(f"Error fetching user analytics: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==================== DATABASE VIEWER ENDPOINTS ====================
+
+@app.get("/api/database/tables")
+async def get_database_tables(payload: dict = Depends(verify_token)):
+    """Get list of all database tables"""
+    try:
+        conn = db.get_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' ORDER BY name")
+        tables = [row[0] for row in cursor.fetchall()]
+        
+        conn.close()
+        
+        return {"tables": tables}
+    except Exception as e:
+        api_logger.error(f"Error fetching tables: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/database/table/{table_name}")
+async def get_table_data(table_name: str, payload: dict = Depends(verify_token)):
+    """Get data from a specific table"""
+    try:
+        # Validate table name to prevent SQL injection
+        conn = db.get_connection()
+        cursor = conn.cursor()
+        
+        # Check if table exists
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name=?", (table_name,))
+        if not cursor.fetchone():
+            raise HTTPException(status_code=404, detail="Table not found")
+        
+        # Get table data (limit to 1000 rows for performance)
+        cursor.execute(f"SELECT * FROM {table_name} LIMIT 1000")
+        
+        # Get column names
+        columns = [description[0] for description in cursor.description]
+        
+        # Fetch rows and convert to dict
+        rows = []
+        for row in cursor.fetchall():
+            rows.append(dict(zip(columns, row)))
+        
+        conn.close()
+        
+        return {"rows": rows, "count": len(rows)}
+    except HTTPException:
+        raise
+    except Exception as e:
+        api_logger.error(f"Error fetching table data: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/admin/users/{chat_id}/analytics")
+async def get_user_analytics(
+    chat_id: str,
+    payload: dict = Depends(verify_token)
+):
+    """Get detailed analytics for a specific user"""
+    try:
+        analytics = user_manager.get_user_analytics(chat_id)
+        
+        if not analytics:
+            raise HTTPException(status_code=404, detail="User not found")
+        
+        return {
+            "chat_id": analytics.chat_id,
+            "username": analytics.username,
+            "total_days": analytics.total_days,
+            "completed_days": analytics.completed_days,
+            "completion_rate": analytics.completion_rate,
+            "current_streak": analytics.current_streak,
+            "longest_streak": analytics.longest_streak,
             "last_activity": analytics.last_activity.isoformat() if analytics.last_activity else None,
             "is_blocked": analytics.is_blocked,
             "created_at": analytics.created_at.isoformat()
@@ -1418,4 +1829,208 @@ async def get_system_analytics(payload: dict = Depends(verify_token)):
         return analytics
     except Exception as e:
         api_logger.error(f"Error fetching system analytics: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==================== PLAYLIST COMPLETION TRACKING ====================
+
+@app.get("/api/playlists/status")
+async def get_playlists_status(payload: dict = Depends(verify_token)):
+    """Get completion status for all playlists (shows first user's progress)"""
+    try:
+        from playlist_tracker import get_playlist_tracker
+        
+        tracker = get_playlist_tracker()
+        
+        # Get first user's config (multi-user system)
+        user_config = user_repo.get_user_config(user_id=1)  # Show first user's progress
+        
+        if not user_config:
+            raise HTTPException(status_code=500, detail="User configuration not found")
+        
+        # Get YouTube API key from environment (optional)
+        youtube_api_key = os.getenv("YOUTUBE_API_KEY")
+        
+        playlists_status = []
+        
+        # Default subjects with user-specific indices
+        subjects = [
+            ('english', user_config.english_playlist, user_config.english_index),
+            ('history', user_config.history_playlist, user_config.history_index),
+            ('polity', user_config.polity_playlist, user_config.polity_index),
+            ('geography', user_config.geography_playlist, user_config.geography_index),
+            ('economics', user_config.economics_playlist, user_config.economics_index)
+        ]
+        
+        # Add custom subjects
+        conn = db.get_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT subject_name, playlist_url, current_index FROM custom_subjects ORDER BY subject_name")
+        custom_subjects = cursor.fetchall()
+        conn.close()
+        
+        for subject_name, playlist_url, current_index in custom_subjects:
+            subjects.append((subject_name.lower(), playlist_url, current_index))
+        
+        for subject, playlist_url, current_index in subjects:
+            if not playlist_url:
+                continue
+            
+            is_completed, total = tracker.is_playlist_completed(
+                current_index, 
+                playlist_url,
+                youtube_api_key
+            )
+            
+            percentage = tracker.get_completion_percentage(
+                current_index,
+                playlist_url,
+                youtube_api_key
+            )
+            
+            remaining = tracker.get_remaining_videos(
+                current_index,
+                playlist_url,
+                youtube_api_key
+            )
+            
+            playlists_status.append({
+                'subject': subject,
+                'current_index': current_index,
+                'total_videos': total,
+                'is_completed': is_completed,
+                'completion_percentage': round(percentage, 1) if percentage else None,
+                'remaining_videos': remaining,
+                'playlist_url': playlist_url
+            })
+        
+        return {
+            'playlists': playlists_status,
+            'has_completed': any(p['is_completed'] for p in playlists_status),
+            'youtube_api_configured': youtube_api_key is not None
+        }
+    
+    except Exception as e:
+        api_logger.error(f"Error getting playlist status: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/api/playlists/{subject}/reset")
+async def reset_playlist(subject: str, payload: dict = Depends(verify_token)):
+    """Reset a playlist to start from beginning"""
+    try:
+        config = global_repo.get_global_config()
+        if not config:
+            raise HTTPException(status_code=500, detail="Global configuration not found")
+        
+        subject_lower = subject.lower()
+        
+        # Reset index for the subject
+        if subject_lower == "english":
+            config.english_index = 0
+        elif subject_lower == "history":
+            config.history_index = 0
+        elif subject_lower == "polity":
+            config.polity_index = 0
+        elif subject_lower == "geography":
+            config.geography_index = 0
+        elif subject_lower == "economics":
+            config.economics_index = 0
+        else:
+            raise HTTPException(status_code=400, detail="Invalid subject")
+        
+        global_repo.update_global_config(config)
+        
+        api_logger.info(f"Playlist reset for {subject} by {payload.get('username')}")
+        
+        return {
+            "success": True,
+            "message": f"{subject.capitalize()} playlist reset to beginning"
+        }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        api_logger.error(f"Error resetting playlist: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ==================== ADMIN BROADCAST MESSAGING ====================
+
+class BroadcastMessage(BaseModel):
+    message: str
+    target: str = "all"  # "all" or specific chat_id
+    chat_id: Optional[str] = None
+
+
+@app.post("/api/admin/broadcast")
+async def broadcast_message(
+    data: BroadcastMessage,
+    payload: dict = Depends(verify_token)
+):
+    """Send broadcast message to users"""
+    try:
+        if data.target == "all":
+            # Send to all active users
+            users = user_repo.get_all_users()
+            active_users = [u for u in users if u.is_active]
+            
+            if not active_users:
+                raise HTTPException(status_code=404, detail="No active users found")
+            
+            success_count = 0
+            failed_users = []
+            
+            for user in active_users:
+                try:
+                    # Format message with admin signature
+                    formatted_message = f"📢 ANNOUNCEMENT\n\n{data.message}\n\n— Admin Team"
+                    
+                    success, error = await bot.send_confirmation(user.chat_id, formatted_message)
+                    if success:
+                        success_count += 1
+                    else:
+                        failed_users.append((user.first_name, error))
+                except Exception as e:
+                    failed_users.append((user.first_name, str(e)))
+            
+            api_logger.info(f"Broadcast sent to {success_count}/{len(active_users)} users by {payload.get('username')}")
+            
+            return {
+                "success": True,
+                "message": f"Broadcast sent to {success_count}/{len(active_users)} users",
+                "sent_count": success_count,
+                "total_users": len(active_users),
+                "failed_count": len(failed_users)
+            }
+        
+        else:
+            # Send to specific user
+            if not data.chat_id:
+                raise HTTPException(status_code=400, detail="chat_id required for targeted message")
+            
+            user = user_repo.get_user_by_chat_id(data.chat_id)
+            if not user:
+                raise HTTPException(status_code=404, detail="User not found")
+            
+            # Format message with admin signature
+            formatted_message = f"📬 MESSAGE FROM ADMIN\n\n{data.message}\n\n— Admin Team"
+            
+            success, error = await bot.send_confirmation(data.chat_id, formatted_message)
+            
+            if not success:
+                raise HTTPException(status_code=500, detail=f"Failed to send message: {error}")
+            
+            api_logger.info(f"Message sent to {user.first_name} by {payload.get('username')}")
+            
+            return {
+                "success": True,
+                "message": f"Message sent to {user.first_name}",
+                "recipient": user.first_name
+            }
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        api_logger.error(f"Broadcast error: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))

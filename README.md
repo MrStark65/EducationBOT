@@ -41,14 +41,13 @@ cp .env.example .env
 uvicorn main:app --reload
 ```
 
-### 2. Start Bot (New Terminal)
-```bash
-cd backend
-source venv/bin/activate
-python bot_simple.py
-```
+The backend automatically starts:
+- REST API
+- Telegram Bot (webhook)
+- File Scheduler
+- Daily Content Scheduler
 
-### 3. Start Frontend (New Terminal)
+### 2. Start Frontend (New Terminal)
 ```bash
 cd frontend
 npm install
