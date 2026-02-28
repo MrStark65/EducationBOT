@@ -335,6 +335,9 @@ def get_weekly_schedule():
         if not config:
             return None
         
+        # Debug: Print the actual schedule time from database
+        print(f"📊 DEBUG: schedule_time from DB = '{config.schedule_time}' (type: {type(config.schedule_time)})")
+        
         # Get all playlist schedules from database (not hardcoded)
         playlist_schedules = global_repo.get_all_global_playlist_schedules()
         
@@ -387,12 +390,30 @@ def get_weekly_schedule():
             })
         
         return {
-            "schedule_time": config.schedule_time.strftime("%I:%M %p") if hasattr(config.schedule_time, 'strftime') else datetime.strptime(config.schedule_time, "%H:%M").strftime("%I:%M %p"),
+            "schedule_time": format_time_to_12hr(config.schedule_time),
             "schedule_time_24hr": config.schedule_time if isinstance(config.schedule_time, str) else config.schedule_time.strftime("%H:%M"),
             "current_day": config.current_day,
             "weekly_schedule": weekly_schedule
         }
     except Exception as e:
+        print(f"❌ Error getting schedule: {e}")
+        import traceback
+        traceback.print_exc()
+        return None
+
+def format_time_to_12hr(time_str):
+    """Convert 24-hour time string to 12-hour format with AM/PM"""
+    try:
+        if isinstance(time_str, str):
+            time_obj = datetime.strptime(time_str, "%H:%M")
+            return time_obj.strftime("%I:%M %p")
+        elif hasattr(time_str, 'strftime'):
+            return time_str.strftime("%I:%M %p")
+        else:
+            return str(time_str)
+    except Exception as e:
+        print(f"❌ Error formatting time {time_str}: {e}")
+        return str(time_str)
         print(f"❌ Error getting schedule: {e}")
         return None
 
