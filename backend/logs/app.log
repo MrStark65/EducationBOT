@@ -511,3 +511,70 @@ sqlite3.OperationalError: no such column: status
 2026-02-28 17:42:48 - app - INFO - playlist_tracker:get_playlist_length:58 - Playlist PL3M0QAJjbrLgfkfZlkaZnmQoJhXOL1c_V has 9 videos
 2026-02-28 17:42:49 - app - INFO - playlist_tracker:get_playlist_length:58 - Playlist PL3M0QAJjbrLhs6obUK9RiZ2JKnOMvSzWh has 8 videos
 2026-02-28 17:42:49 - app - INFO - playlist_tracker:get_playlist_length:58 - Playlist PLT2gY-XYbaKZDzxc6ehm3D8q06ekDz6pk has 17 videos
+2026-02-28 18:42:59 - app - INFO - main:lifespan:171 - 🛑 Shutting down Officer Priya CDS System
+2026-02-28 18:42:59 - app - INFO - main:lifespan:181 - ✅ Schedulers stopped
+2026-02-28 18:43:01 - app - INFO - main:lifespan:88 - 🚀 Starting Officer Priya CDS System
+2026-02-28 18:43:01 - app - INFO - main:lifespan:106 - ✅ Authentication system initialized
+2026-02-28 18:43:01 - app - INFO - main:lifespan:110 - ✅ Backup system initialized
+2026-02-28 18:43:01 - app - INFO - main:lifespan:115 - ✅ File manager initialized
+2026-02-28 18:43:01 - app - INFO - main:lifespan:119 - ✅ User manager initialized
+2026-02-28 18:43:01 - app - INFO - main:run_bot:125 - 🤖 Starting Telegram Bot in background...
+2026-02-28 18:43:01 - app - INFO - main:lifespan:133 - ✅ Telegram Bot started in background thread
+2026-02-28 18:43:01 - app - INFO - main:lifespan:139 - ✅ Initial backup created: backups/backup_20260228_184301.db.gz
+2026-02-28 18:43:01 - app - INFO - main:lifespan:143 - ✅ Multi-user system initialized
+2026-02-28 18:43:01 - app - INFO - main:lifespan:154 - ✅ File scheduler started
+2026-02-28 18:43:01 - app - INFO - main:lifespan:164 - ✅ Daily content scheduler started
+2026-02-28 18:43:02 - app - INFO - main:lifespan:171 - 🛑 Shutting down Officer Priya CDS System
+2026-02-28 18:43:02 - app - INFO - main:lifespan:181 - ✅ Schedulers stopped
+2026-02-28 18:43:03 - app - INFO - main:lifespan:88 - 🚀 Starting Officer Priya CDS System
+2026-02-28 18:43:04 - app - INFO - main:lifespan:106 - ✅ Authentication system initialized
+2026-02-28 18:43:04 - app - INFO - main:lifespan:110 - ✅ Backup system initialized
+2026-02-28 18:43:04 - app - INFO - main:lifespan:115 - ✅ File manager initialized
+2026-02-28 18:43:04 - app - INFO - main:lifespan:119 - ✅ User manager initialized
+2026-02-28 18:43:04 - app - INFO - main:run_bot:125 - 🤖 Starting Telegram Bot in background...
+2026-02-28 18:43:04 - app - INFO - main:lifespan:133 - ✅ Telegram Bot started in background thread
+2026-02-28 18:43:04 - app - INFO - main:lifespan:139 - ✅ Initial backup created: backups/backup_20260228_184304.db.gz
+2026-02-28 18:43:04 - app - INFO - main:lifespan:143 - ✅ Multi-user system initialized
+2026-02-28 18:43:04 - app - INFO - main:lifespan:154 - ✅ File scheduler started
+2026-02-28 18:43:04 - app - INFO - main:lifespan:164 - ✅ Daily content scheduler started
+2026-02-28 18:44:28 - app - INFO - main:lifespan:171 - 🛑 Shutting down Officer Priya CDS System
+2026-02-28 18:44:28 - app - INFO - main:lifespan:181 - ✅ Schedulers stopped
+2026-02-28 18:44:29 - app - INFO - main:lifespan:88 - 🚀 Starting Officer Priya CDS System
+2026-02-28 18:44:29 - app - INFO - main:lifespan:106 - ✅ Authentication system initialized
+2026-02-28 18:44:29 - app - INFO - main:lifespan:110 - ✅ Backup system initialized
+2026-02-28 18:44:29 - app - INFO - main:lifespan:115 - ✅ File manager initialized
+2026-02-28 18:44:29 - app - INFO - main:lifespan:119 - ✅ User manager initialized
+2026-02-28 18:44:29 - app - INFO - main:run_bot:125 - 🤖 Starting Telegram Bot in background...
+2026-02-28 18:44:29 - app - INFO - main:lifespan:133 - ✅ Telegram Bot started in background thread
+2026-02-28 18:44:29 - app - INFO - main:lifespan:139 - ✅ Initial backup created: backups/backup_20260228_184429.db.gz
+2026-02-28 18:44:29 - app - INFO - main:lifespan:143 - ✅ Multi-user system initialized
+2026-02-28 18:44:29 - app - INFO - main:lifespan:154 - ✅ File scheduler started
+2026-02-28 18:44:29 - app - INFO - main:lifespan:164 - ✅ Daily content scheduler started
+2026-02-28 18:44:32 - app - INFO - main:lifespan:171 - 🛑 Shutting down Officer Priya CDS System
+2026-02-28 18:44:32 - app - INFO - main:lifespan:181 - ✅ Schedulers stopped
+2026-02-28 18:44:33 - app - INFO - main:lifespan:88 - 🚀 Starting Officer Priya CDS System
+2026-02-28 18:44:33 - app - INFO - main:lifespan:106 - ✅ Authentication system initialized
+2026-02-28 18:44:33 - app - INFO - main:lifespan:110 - ✅ Backup system initialized
+2026-02-28 18:44:33 - app - INFO - main:lifespan:115 - ✅ File manager initialized
+2026-02-28 18:44:33 - app - INFO - main:lifespan:119 - ✅ User manager initialized
+2026-02-28 18:44:33 - app - INFO - main:run_bot:125 - 🤖 Starting Telegram Bot in background...
+2026-02-28 18:44:33 - app - INFO - main:lifespan:133 - ✅ Telegram Bot started in background thread
+2026-02-28 18:44:34 - app - INFO - main:lifespan:139 - ✅ Initial backup created: backups/backup_20260228_184433.db.gz
+2026-02-28 18:44:34 - app - INFO - main:lifespan:143 - ✅ Multi-user system initialized
+2026-02-28 18:44:34 - app - INFO - main:lifespan:154 - ✅ File scheduler started
+2026-02-28 18:44:34 - app - INFO - main:lifespan:164 - ✅ Daily content scheduler started
+2026-02-28 18:54:57 - app - INFO - main:lifespan:171 - 🛑 Shutting down Officer Priya CDS System
+2026-02-28 18:54:57 - app - INFO - main:lifespan:181 - ✅ Schedulers stopped
+2026-02-28 18:54:59 - app - INFO - main:lifespan:88 - 🚀 Starting Officer Priya CDS System
+2026-02-28 18:54:59 - app - INFO - main:lifespan:106 - ✅ Authentication system initialized
+2026-02-28 18:54:59 - app - INFO - main:lifespan:110 - ✅ Backup system initialized
+2026-02-28 18:54:59 - app - INFO - main:lifespan:115 - ✅ File manager initialized
+2026-02-28 18:54:59 - app - INFO - main:lifespan:119 - ✅ User manager initialized
+2026-02-28 18:54:59 - app - INFO - main:run_bot:125 - 🤖 Starting Telegram Bot in background...
+2026-02-28 18:54:59 - app - INFO - main:lifespan:133 - ✅ Telegram Bot started in background thread
+2026-02-28 18:54:59 - app - INFO - main:lifespan:139 - ✅ Initial backup created: backups/backup_20260228_185459.db.gz
+2026-02-28 18:54:59 - app - INFO - main:lifespan:143 - ✅ Multi-user system initialized
+2026-02-28 18:54:59 - app - INFO - main:lifespan:154 - ✅ File scheduler started
+2026-02-28 18:54:59 - app - INFO - main:lifespan:164 - ✅ Daily content scheduler started
+2026-02-28 19:09:03 - app - INFO - main:lifespan:171 - 🛑 Shutting down Officer Priya CDS System
+2026-02-28 19:09:03 - app - INFO - main:lifespan:181 - ✅ Schedulers stopped
