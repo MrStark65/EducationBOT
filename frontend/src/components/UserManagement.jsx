@@ -166,7 +166,7 @@ function UserManagement({ token }) {
               <div className="user-stats">
                 <div className="stat">
                   <span className="stat-label">Streak</span>
-                  <span className="stat-value">🔥 {user.current_streak || 0}</span>
+                  <span className="stat-value">🔥 {user.streak || 0}</span>
                 </div>
                 <div className="stat">
                   <span className="stat-label">Days</span>
