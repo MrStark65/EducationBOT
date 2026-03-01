@@ -1,24 +1,62 @@
-"""Multi-user database schema"""
+"""Multi-user database schema - supports both SQLite and PostgreSQL"""
 
 import sqlite3
+import os
 from pathlib import Path
 from typing import Optional
 
+# Check if PostgreSQL is available
+DATABASE_URL = os.getenv("DATABASE_URL")
+USE_POSTGRES = DATABASE_URL and DATABASE_URL.startswith("postgresql://")
+
+if USE_POSTGRES:
+    try:
+        import psycopg2
+        from psycopg2.extras import RealDictCursor
+        POSTGRES_AVAILABLE = True
+    except ImportError:
+        print("⚠️  DATABASE_URL set but psycopg2 not installed, falling back to SQLite")
+        USE_POSTGRES = False
+        POSTGRES_AVAILABLE = False
+else:
+    POSTGRES_AVAILABLE = False
+
 class MultiUserDatabase:
-    """Database manager for multi-user Officer Priya system"""
+    """Database manager for multi-user Officer Priya system - supports SQLite and PostgreSQL"""
     
     def __init__(self, db_path: str = "officer_priya_multi.db"):
         self.db_path = db_path
-        self.init_database()
+        self.database_url = DATABASE_URL
+        self.use_postgres = USE_POSTGRES and POSTGRES_AVAILABLE
+        
+        if self.use_postgres:
+            print(f"✅ Using PostgreSQL database (persistent storage)")
+        else:
+            print(f"✅ Using SQLite database: {db_path} (local development)")
+        
+        # Only initialize tables if using SQLite (PostgreSQL tables already exist)
+        if not self.use_postgres:
+            self.init_database()
     
-    def get_connection(self) -> sqlite3.Connection:
-        """Get database connection"""
-        conn = sqlite3.Connection(self.db_path)
-        conn.row_factory = sqlite3.Row
-        return conn
+    def get_connection(self):
+        """Get database connection - returns SQLite or PostgreSQL connection"""
+        if self.use_postgres:
+            conn = psycopg2.connect(self.database_url)
+            return conn
+        else:
+            conn = sqlite3.Connection(self.db_path)
+            conn.row_factory = sqlite3.Row
+            return conn
+    
+    def get_cursor(self, conn):
+        """Get cursor with appropriate row factory"""
+        if self.use_postgres:
+            return conn.cursor(cursor_factory=RealDictCursor)
+        else:
+            return conn.cursor()
     
     def init_database(self):
-        """Initialize database with multi-user tables"""
+        """Initialize database with multi-user tables (SQLite only - PostgreSQL tables already exist)"""
         conn = self.get_connection()
         cursor = conn.cursor()
         
@@ -105,3 +143,4 @@ class MultiUserDatabase:
         conn.close()
         
         print("✅ Multi-user database initialized")
+

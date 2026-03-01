@@ -324,7 +324,7 @@ def calculate_days_per_subject(schedule_data):
         return days_count
 
 def get_weekly_schedule():
-    """Get weekly schedule from global repository"""
+    """Get weekly schedule from global repository - shows the PATTERN, not actual delivery prediction"""
     try:
         from user_repository import GlobalRepository
         from multi_user_database import MultiUserDatabase
@@ -343,7 +343,7 @@ def get_weekly_schedule():
         # Get all playlist schedules from database (not hardcoded)
         playlist_schedules = global_repo.get_all_global_playlist_schedules()
         
-        # Build weekly schedule
+        # Build weekly schedule - show PATTERN not actual delivery
         weekly_schedule = []
         today = datetime.now().date()
         
@@ -359,31 +359,17 @@ def get_weekly_schedule():
             for subject, schedule in playlist_schedules.items():
                 start_date = datetime.strptime(schedule['start_date'], "%Y-%m-%d").date()
                 
+                # Skip if before start date
                 if date < start_date:
                     continue
                 
+                # Check if this weekday is in the schedule
                 if weekday not in schedule['selected_days']:
                     continue
                 
-                if schedule['frequency'] == 'daily':
-                    subjects_for_day.append(subject)
-                elif schedule['frequency'] == 'alternate':
-                    last_sent = schedule.get('last_sent_date')
-                    if not last_sent:
-                        subjects_for_day.append(subject)
-                    else:
-                        last_sent_date = datetime.strptime(last_sent, "%Y-%m-%d").date()
-                        days_passed = 0
-                        check_date = last_sent_date + timedelta(days=1)
-                        while check_date <= date:
-                            check_python_weekday = check_date.weekday()
-                            check_weekday = (check_python_weekday + 1) % 7
-                            if check_weekday in schedule['selected_days']:
-                                days_passed += 1
-                            check_date += timedelta(days=1)
-                        
-                        if days_passed >= 2:
-                            subjects_for_day.append(subject)
+                # For weekly schedule display, show all subjects on their configured days
+                # regardless of last_sent_date (that's for actual delivery logic)
+                subjects_for_day.append(subject)
             
             weekly_schedule.append({
                 "day_name": day_name,

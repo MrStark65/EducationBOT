@@ -70,7 +70,9 @@ class MultiUserScheduler:
             days_passed = 0
             check_date = last_sent_date + timedelta(days=1)
             while check_date <= today:
-                if check_date.weekday() in selected_days:
+                # Convert Python weekday (0=Mon) to 0=Sun convention
+                check_weekday = (check_date.weekday() + 1) % 7
+                if check_weekday in selected_days:
                     days_passed += 1
                 check_date += timedelta(days=1)
             
@@ -85,7 +87,9 @@ class MultiUserScheduler:
         """Send SAME content to ALL users"""
         try:
             today = datetime.now(IST).strftime("%Y-%m-%d")
-            today_weekday = datetime.now(IST).weekday()  # 0=Monday, 6=Sunday
+            python_weekday = datetime.now(IST).weekday()  # 0=Monday, 6=Sunday
+            # Convert to 0=Sunday convention used in database
+            today_weekday = (python_weekday + 1) % 7  # 0=Sunday, 1=Monday, 6=Saturday
             
             # Get global config
             config = self.global_repo.get_global_config()
